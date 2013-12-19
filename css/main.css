@@ -10,6 +10,11 @@ section {
     float: left
 }
 
+.content {
+    border: 1px solid;
+    border-color: magenta
+}
+
 section.first {
     background-color: red;
     border-color: gray
@@ -26,14 +31,27 @@ section.last {
 }
 
 .header {
+    color: red;
     background-color: yellow;
     border: 1px solid;
     border-color: gray
 }
 
 .footer {
+    color: blue;
     background-color: olive;
     border: 1px solid;
     border-color: gray;
-    clear: left
+    float: right;
+    clear: none
+}
+
+.wrap {
+    position: relative;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin-bottom: -32rem;
+    overflow: hidden;
+    box-shadow: 0 0 4px rgba(0,0,0,.3);
 }
