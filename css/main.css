@@ -5,6 +5,9 @@ html {
 section {
     display: block;
     border: 1px solid;
+    position: relative;
+    clear: right;
+    float: left
 }
 
 section.first {
@@ -31,5 +34,6 @@ section.last {
 .footer {
     background-color: olive;
     border: 1px solid;
-    border-color: gray
+    border-color: gray;
+    clear: left
 }
