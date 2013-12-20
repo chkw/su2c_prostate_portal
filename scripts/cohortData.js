@@ -15,7 +15,7 @@ var ids = cohort.getPatientIds();
 
 for (var i in ids) {
     var id = ids[i];
-    console.log("id: " + id);
+    console.log(i + ": " + id);
     var p = cohort.getPatient(id);
     if (p) {
         console.log("study: " + p.getStudySite());
