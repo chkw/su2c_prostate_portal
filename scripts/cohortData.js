@@ -6,23 +6,85 @@ xmlHttp.open("GET", dataUrl, false);
 xmlHttp.send(null);
 var data = xmlHttp.responseText;
 
-var cohort = new cohortData();
-cohort.readJson(data);
+var cohort = new cohortData(data);
 
-function cohortData() {
+var patient = cohort.getPatient("DTB-046");
+console.log(patient);
 
-    this.cohort = null;
+var ids = cohort.getPatientIds();
 
-    this.getPatientData = function(patientId){
-        var patientData = null;
-        if (patientId in this.cohort){
-            return this.cohort[patientId];
+for (var i in ids) {
+    var id = ids[i];
+    console.log("id: " + id);
+    var p = cohort.getPatient(id);
+    if (p) {
+        console.log("study: " + p.getStudySite());
+        console.log("biopsy: " + p.getBiopsySite());
+    }
+}
+
+// TODO objects below
+
+/**
+ * Data about a single patient.
+ * @param {Object} data
+ */
+function patientData(data) {
+    this.data = data;
+
+    this.getStudySite = function() {
+        if (this.data == null) {
+            return null;
+        } else if (this.data["attributes"] == null) {
+            return null;
+        } else if (this.data["attributes"]["Demographics"] == null) {
+            return null;
+        } else {
+            var val = this.data["attributes"]["Demographics"]["Study Site"];
+            return val;
+        }
+    };
+
+    this.getBiopsySite = function() {
+        if (this.data == null) {
+            return null;
+        } else if (this.data["attributes"] == null) {
+            return null;
+        } else if (this.data["attributes"]["SU2C Biopsy V2"] == null) {
+            return null;
+        } else {
+            var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
+            return val;
+        }
+    };
+}
+
+/**
+ * A group of patient data.
+ * @param {Object} cohortJson
+ */
+function cohortData(cohortJson) {
+    this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
+
+    /**
+     *Get the patientData.
+     */
+    this.getPatient = function(patientId) {
+        if ( patientId in this.cohort) {
+            return new patientData(this.cohort[patientId]);
         } else {
             return null;
         }
     };
 
-    this.readJson = function(cohortJson) {
-        this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
+    /**
+     * Get array of patient IDs.
+     */
+    this.getPatientIds = function() {
+        var ids = new Array();
+        for (var id in this.cohort) {
+            ids.push(id);
+        }
+        return ids;
     };
 }
