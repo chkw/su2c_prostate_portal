@@ -23,6 +23,32 @@ for (var i in ids) {
     }
 }
 
+$(function () {
+    $('#chart').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Fruit Consumption'
+        },
+        xAxis: {
+            categories: ['Apples', 'Bananas', 'Oranges']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+
 // TODO objects below
 
 /**
@@ -64,6 +90,7 @@ function patientData(data) {
  * @param {Object} cohortJson
  */
 function cohortData(cohortJson) {
+
     this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
 
     /**
