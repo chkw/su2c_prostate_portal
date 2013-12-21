@@ -23,31 +23,38 @@ for (var i in ids) {
     }
 }
 
-$(function () {
-    $('#chart').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Fruit Consumption'
-        },
-        xAxis: {
-            categories: ['Apples', 'Bananas', 'Oranges']
-        },
-        yAxis: {
-            title: {
-                text: 'Fruit eaten'
-            }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }, {
-            name: 'John',
-            data: [5, 7, 3]
-        }]
+var chartOptions = {
+    chart : {
+        type : 'bar'
+    },
+    title : {
+        text : 'Fruit Consumption'
+    },
+    xAxis : {
+        categories : ['Apples', 'Bananas', 'Oranges']
+    },
+    yAxis : {
+        title : {
+            text : 'Fruit eaten'
+        }
+    },
+    series : [{
+        name : 'Jane',
+        data : [1, 0, 40]
+    }, {
+        name : 'John',
+        data : [5, 7, 3]
+    }]
+};
+
+function addHighChart(elementId, chartOptions) {
+    $(function() {
+        $("#" + elementId).empty();
+        $("#" + elementId).highcharts(chartOptions);
     });
-});
+}
+
+addHighChart("chart", chartOptions);
 
 // TODO objects below
 
