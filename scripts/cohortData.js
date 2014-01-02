@@ -11,7 +11,9 @@ var cohort = new cohortData(data);
 var patient = cohort.getPatient("DTB-046");
 console.log(patient);
 
-var ids = cohort.getPatientIds();
+var ids = cohort.getAllPatientIds();
+
+console.log(cohort.getBiopsySiteCounts(ids));
 
 // for (var i in ids) {
 // var id = ids[i];
@@ -87,6 +89,9 @@ addHighChart("chart02", chart2Options);
 function patientData(data) {
     this.data = data;
 
+    /**
+     * Get the study site.
+     */
     this.getStudySite = function() {
         if (this.data == null) {
             return null;
@@ -100,6 +105,9 @@ function patientData(data) {
         }
     };
 
+    /**
+     * Get the biopsy site.
+     */
     this.getBiopsySite = function() {
         if (this.data == null) {
             return null;
@@ -120,7 +128,40 @@ function patientData(data) {
  */
 function cohortData(cohortJson) {
 
+    // parse the cohort data
     this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
+
+    /**
+     * Get the biopsy site counts for the specified patient IDs.
+     */
+    this.getBiopsySiteCounts = function(ids) {
+        var counts = new Object();
+        for (var i in ids) {
+            var id = ids[i];
+            var biopsySite = this.getPatient(id).getBiopsySite();
+            if (!( biopsySite in counts)) {
+                counts[biopsySite] = 0;
+            }
+            counts[biopsySite]++;
+        }
+        return counts;
+    };
+
+    /**
+     * Get the study site counts for the specified patient IDs.
+     */
+    this.getStudySiteCounts = function(ids) {
+        var counts = new Object();
+        for (var i in ids) {
+            var id = ids[i];
+            var studySite = this.getPatient(id).getStudySite();
+            if (!( studySite in counts)) {
+                counts[studySite] = 0;
+            }
+            counts[studySite]++;
+        }
+        return counts;
+    };
 
     /**
      *Get the patientData.
@@ -134,9 +175,9 @@ function cohortData(cohortJson) {
     };
 
     /**
-     * Get array of patient IDs.
+     * Get array of all patient IDs.
      */
-    this.getPatientIds = function() {
+    this.getAllPatientIds = function() {
         var ids = new Array();
         for (var id in this.cohort) {
             ids.push(id);
