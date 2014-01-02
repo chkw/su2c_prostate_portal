@@ -81,10 +81,10 @@ chart1Options = {
         plotShadow : false
     },
     title : {
-        text : 'Biopsy Site for Samples'
+        text : 'Number of Samples by Biopsy Site'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.y} samples</b>'
+        pointFormat : '{series.name}: <b>{point.y}</b>'
     },
     plotOptions : {
         pie : {
@@ -94,13 +94,13 @@ chart1Options = {
                 enabled : true,
                 color : '#000000',
                 connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.y} samples'
+                format : '<b>{point.name}</b>: {point.y}'
             }
         }
     },
     series : [{
         type : 'pie',
-        name : 'percent of samples',
+        name : 'number of samples',
         data : biopsySiteData
     }]
 };
@@ -112,10 +112,10 @@ chart2Options = {
         plotShadow : false
     },
     title : {
-        text : 'Study Site for Samples'
+        text : 'Number of Samples by Study Site'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.y} samples</b>'
+        pointFormat : '{series.name}: <b>{point.y}</b>'
     },
     plotOptions : {
         pie : {
@@ -125,13 +125,13 @@ chart2Options = {
                 enabled : true,
                 color : '#000000',
                 connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.y} samples'
+                format : '<b>{point.name}</b>: {point.y}'
             }
         }
     },
     series : [{
         type : 'pie',
-        name : 'percent of samples',
+        name : 'number of samples',
         data : studySiteData
     }]
 };
