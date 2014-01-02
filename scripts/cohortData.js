@@ -13,7 +13,11 @@ console.log(patient);
 
 var ids = cohort.getAllPatientIds();
 
-console.log(cohort.getBiopsySiteCounts(ids));
+var studySiteData = cohort.getStudySiteCounts(ids);
+var biopsySiteData = cohort.getBiopsySiteCounts(ids);
+
+console.log(JSON.stringify(studySiteData));
+console.log(JSON.stringify(biopsySiteData));
 
 // for (var i in ids) {
 // var id = ids[i];
@@ -132,6 +136,20 @@ function cohortData(cohortJson) {
     this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
 
     /**
+     * Get series data for pie chart from category counts.
+     */
+    this.countsToPieData = function(counts) {
+        var data = new Array();
+        for (var type in counts) {
+            var typeData = new Object();
+            data.push(typeData);
+            typeData["name"] = type;
+            typeData["y"] = counts[type];
+        }
+        return data;
+    };
+
+    /**
      * Get the biopsy site counts for the specified patient IDs.
      */
     this.getBiopsySiteCounts = function(ids) {
@@ -144,7 +162,8 @@ function cohortData(cohortJson) {
             }
             counts[biopsySite]++;
         }
-        return counts;
+        var data = this.countsToPieData(counts);
+        return data;
     };
 
     /**
@@ -160,7 +179,8 @@ function cohortData(cohortJson) {
             }
             counts[studySite]++;
         }
-        return counts;
+        var data = this.countsToPieData(counts);
+        return data;
     };
 
     /**
