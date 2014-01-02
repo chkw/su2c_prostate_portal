@@ -138,7 +138,7 @@ function cohortData(cohortJson) {
     /**
      * Get series data for pie chart from category counts.
      */
-    this.countsToPieData = function(counts) {
+    countsToPieData = function(counts) {
         var data = new Array();
         for (var type in counts) {
             var typeData = new Object();
@@ -162,7 +162,7 @@ function cohortData(cohortJson) {
             }
             counts[biopsySite]++;
         }
-        var data = this.countsToPieData(counts);
+        var data = countsToPieData(counts);
         return data;
     };
 
@@ -179,7 +179,7 @@ function cohortData(cohortJson) {
             }
             counts[studySite]++;
         }
-        var data = this.countsToPieData(counts);
+        var data = countsToPieData(counts);
         return data;
     };
 
