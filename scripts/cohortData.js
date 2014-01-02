@@ -8,26 +8,10 @@ var data = xmlHttp.responseText;
 
 var cohort = new cohortData(data);
 
-var patient = cohort.getPatient("DTB-046");
-console.log(patient);
-
 var ids = cohort.getAllPatientIds();
 
 var studySiteData = cohort.getStudySiteCounts(ids);
 var biopsySiteData = cohort.getBiopsySiteCounts(ids);
-
-console.log(JSON.stringify(studySiteData));
-console.log(JSON.stringify(biopsySiteData));
-
-// for (var i in ids) {
-// var id = ids[i];
-// console.log(i + ": " + id);
-// var p = cohort.getPatient(id);
-// if (p) {
-// console.log("study: " + p.getStudySite());
-// console.log("biopsy: " + p.getBiopsySite());
-// }
-// }
 
 Highcharts.setOptions({
     chart : {
