@@ -74,6 +74,68 @@ var chart2Options = {
     }]
 };
 
+chart1Options = {
+    chart : {
+        plotBackgroundColor : null,
+        plotBorderWidth : null,
+        plotShadow : false
+    },
+    title : {
+        text : 'Biopsy Site for Samples'
+    },
+    tooltip : {
+        pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions : {
+        pie : {
+            allowPointSelect : true,
+            cursor : 'pointer',
+            dataLabels : {
+                enabled : true,
+                color : '#000000',
+                connectorColor : '#000000',
+                format : '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series : [{
+        type : 'pie',
+        name : 'percent of samples',
+        data : biopsySiteData
+    }]
+};
+
+chart2Options = {
+    chart : {
+        plotBackgroundColor : null,
+        plotBorderWidth : null,
+        plotShadow : false
+    },
+    title : {
+        text : 'Study Site for Samples'
+    },
+    tooltip : {
+        pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions : {
+        pie : {
+            allowPointSelect : true,
+            cursor : 'pointer',
+            dataLabels : {
+                enabled : true,
+                color : '#000000',
+                connectorColor : '#000000',
+                format : '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series : [{
+        type : 'pie',
+        name : 'percent of samples',
+        data : studySiteData
+    }]
+};
+
 function addHighChart(elementId, chartOptions) {
     $(function() {
         $("#" + elementId).empty();
