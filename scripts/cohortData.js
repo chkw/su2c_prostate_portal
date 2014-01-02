@@ -84,7 +84,7 @@ chart1Options = {
         text : 'Biopsy Site for Samples'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat : '{series.name}: <b>{point.y} samples</b>'
     },
     plotOptions : {
         pie : {
@@ -94,7 +94,7 @@ chart1Options = {
                 enabled : true,
                 color : '#000000',
                 connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.percentage:.1f} %'
+                format : '<b>{point.name}</b>: {point.y} samples'
             }
         }
     },
@@ -115,7 +115,7 @@ chart2Options = {
         text : 'Study Site for Samples'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat : '{series.name}: <b>{point.y} samples</b>'
     },
     plotOptions : {
         pie : {
@@ -125,7 +125,7 @@ chart2Options = {
                 enabled : true,
                 color : '#000000',
                 connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.percentage:.1f} %'
+                format : '<b>{point.name}</b>: {point.y} samples'
             }
         }
     },
