@@ -28,6 +28,7 @@ Highcharts.setOptions({
 
 var chart1Options = {
     chart : {
+        renderTo : null,
         plotBackgroundColor : null,
         plotBorderWidth : null,
         plotShadow : false
@@ -60,6 +61,7 @@ var chart1Options = {
 
 var chart2Options = {
     chart : {
+        renderTo : null,
         plotBackgroundColor : null,
         plotBorderWidth : null,
         plotShadow : false
