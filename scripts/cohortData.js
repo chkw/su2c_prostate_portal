@@ -10,8 +10,13 @@ var cohort = new cohortData(data);
 
 var ids = cohort.getAllPatientIds();
 
-var studySiteData = cohort.getStudySiteCounts(ids);
-var biopsySiteData = cohort.getBiopsySiteCounts(ids);
+var selectedIds = cohort.selectPatients(ids, 'studySite', 'Mt. Zion');
+ids = selectedIds;
+selectedIds = cohort.selectPatients(ids, 'biopsySite', 'Bone');
+console.log(JSON.stringify(selectedIds));
+
+var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
+var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
 
 Highcharts.setOptions({
     chart : {
@@ -168,34 +173,22 @@ function cohortData(cohortJson) {
     };
 
     /**
-     * Get the biopsy site counts for the specified patient IDs.
+     * Get the counts for the specified patient IDs and feature. feature is one of ['studySite', 'biopsySite'].
      */
-    this.getBiopsySiteCounts = function(ids) {
+    this.getPatientCounts = function(ids, feature) {
         var counts = new Object();
         for (var i in ids) {
             var id = ids[i];
-            var biopsySite = this.getPatient(id).getBiopsySite();
-            if (!( biopsySite in counts)) {
-                counts[biopsySite] = 0;
+            var val = '__NOT_SET__';
+            if (feature == 'studySite') {
+                val = this.getPatient(id).getStudySite();
+            } else if (feature == 'biopsySite') {
+                val = this.getPatient(id).getBiopsySite();
             }
-            counts[biopsySite]++;
-        }
-        var data = countsToPieData(counts);
-        return data;
-    };
-
-    /**
-     * Get the study site counts for the specified patient IDs.
-     */
-    this.getStudySiteCounts = function(ids) {
-        var counts = new Object();
-        for (var i in ids) {
-            var id = ids[i];
-            var studySite = this.getPatient(id).getStudySite();
-            if (!( studySite in counts)) {
-                counts[studySite] = 0;
+            if ((val != '__NOT_SET__') && !( val in counts)) {
+                counts[val] = 0;
             }
-            counts[studySite]++;
+            counts[val]++;
         }
         var data = countsToPieData(counts);
         return data;
@@ -210,6 +203,26 @@ function cohortData(cohortJson) {
         } else {
             return null;
         }
+    };
+
+    /**
+     * From the specified ID list, select only the patients by the specified parameters.  selectBy is one of ['studySite', 'biopsySite'].
+     */
+    this.selectPatients = function(startingIds, selectBy, selectVal) {
+        var keptIds = new Array();
+        for (var i in startingIds) {
+            var id = startingIds[i];
+            var patientVal = '__NOT_SET__';
+            if (selectBy == 'studySite') {
+                patientVal = this.getPatient(id).getStudySite();
+            } else if (selectBy == 'biopsySite') {
+                patientVal = this.getPatient(id).getBiopsySite();
+            }
+            if ((patientVal != '__NOT_SET__') && (patientVal == selectVal)) {
+                keptIds.push(id);
+            }
+        }
+        return keptIds;
     };
 
     /**
