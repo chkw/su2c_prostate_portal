@@ -85,7 +85,8 @@ chart1Options = {
     series : [{
         type : 'pie',
         name : 'number of samples',
-        data : biopsySiteData
+        data : biopsySiteData,
+        showInLegend : true
     }]
 };
 
@@ -116,7 +117,8 @@ chart2Options = {
     series : [{
         type : 'pie',
         name : 'number of samples',
-        data : studySiteData
+        data : studySiteData,
+        showInLegend : true
     }]
 };
 
