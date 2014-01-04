@@ -31,7 +31,7 @@ Highcharts.setOptions({
     }
 });
 
-var chart1Options = {
+var chart2Options = {
     chart : {
         renderTo : null,
         plotBackgroundColor : null,
@@ -64,7 +64,7 @@ var chart1Options = {
     }]
 };
 
-var chart2Options = {
+var chart1Options = {
     chart : {
         renderTo : null,
         plotBackgroundColor : null,
