@@ -31,40 +31,7 @@ Highcharts.setOptions({
     }
 });
 
-var chart2Options = {
-    chart : {
-        renderTo : null,
-        plotBackgroundColor : null,
-        plotBorderWidth : null,
-        plotShadow : false
-    },
-    title : {
-        text : 'Number of Samples by Biopsy Site'
-    },
-    tooltip : {
-        pointFormat : '{series.name}: <b>{point.y}</b>'
-    },
-    plotOptions : {
-        pie : {
-            allowPointSelect : true,
-            cursor : 'pointer',
-            dataLabels : {
-                enabled : true,
-                color : '#000000',
-                connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.y}'
-            }
-        }
-    },
-    series : [{
-        type : 'pie',
-        name : 'number of samples',
-        data : biopsySiteData,
-        showInLegend : true
-    }]
-};
-
-var chart1Options = {
+var studySiteChartOptions = {
     chart : {
         renderTo : null,
         plotBackgroundColor : null,
@@ -97,6 +64,39 @@ var chart1Options = {
     }]
 };
 
+var biopsySiteChartOptions = {
+    chart : {
+        renderTo : null,
+        plotBackgroundColor : null,
+        plotBorderWidth : null,
+        plotShadow : false
+    },
+    title : {
+        text : 'Number of Samples by Biopsy Site'
+    },
+    tooltip : {
+        pointFormat : '{series.name}: <b>{point.y}</b>'
+    },
+    plotOptions : {
+        pie : {
+            allowPointSelect : true,
+            cursor : 'pointer',
+            dataLabels : {
+                enabled : true,
+                color : '#000000',
+                connectorColor : '#000000',
+                format : '<b>{point.name}</b>: {point.y}'
+            }
+        }
+    },
+    series : [{
+        type : 'pie',
+        name : 'number of samples',
+        data : biopsySiteData,
+        showInLegend : true
+    }]
+};
+
 function addHighChart(elementId, chartOptions) {
     $(function() {
         $("#" + elementId).empty();
@@ -104,8 +104,8 @@ function addHighChart(elementId, chartOptions) {
     });
 }
 
-addHighChart("chart01", chart1Options);
-addHighChart("chart02", chart2Options);
+addHighChart("chart01", studySiteChartOptions);
+addHighChart("chart02", biopsySiteChartOptions);
 
 // TODO objects below
 
