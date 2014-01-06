@@ -1,3 +1,9 @@
+/**
+ * chrisw@soe.ucsc.edu
+ * December 19, 2013
+ * cohortData is created with a cohortJSON.  Patients may be selected on various criteria.
+ * Also, counts can be retrieved for the purpose of drawing graphs/figures.
+ */
 
 /**
  * Data about a single patient.
