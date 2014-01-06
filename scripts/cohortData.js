@@ -15,6 +15,8 @@ ids = selectedIds;
 selectedIds = cohort.selectPatients(ids, 'biopsySite', 'Bone');
 console.log(JSON.stringify(selectedIds));
 
+selectedIds = cohort.getAllPatientIds();
+
 var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
 var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
 
@@ -31,31 +33,44 @@ Highcharts.setOptions({
     }
 });
 
+var chartOptions = {
+    renderTo : null,
+    plotBackgroundColor : null,
+    plotBorderWidth : null,
+    plotShadow : false
+};
+
+var plotOptions = {
+    pie : {
+        allowPointSelect : true,
+        cursor : 'pointer',
+        dataLabels : {
+            enabled : true,
+            color : 'black',
+            connectorColor : 'gray',
+            format : '<b>{point.name}</b>: {point.y}'
+        },
+        point : {
+            events : {
+                click : function() {
+                    console.log('clicked the slice for: ' + this.name);
+                }
+            }
+        }
+    }
+};
+
+var tooltipOptions = {
+    pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
+};
+
 var studySiteChartOptions = {
-    chart : {
-        renderTo : null,
-        plotBackgroundColor : null,
-        plotBorderWidth : null,
-        plotShadow : false
-    },
+    chart : chartOptions,
     title : {
         text : 'Number of Samples by Study Site'
     },
-    tooltip : {
-        pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
-    },
-    plotOptions : {
-        pie : {
-            allowPointSelect : true,
-            cursor : 'pointer',
-            dataLabels : {
-                enabled : true,
-                color : '#000000',
-                connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.y}'
-            }
-        }
-    },
+    tooltip : tooltipOptions,
+    plotOptions : plotOptions,
     series : [{
         type : 'pie',
         name : 'number of samples',
@@ -65,30 +80,12 @@ var studySiteChartOptions = {
 };
 
 var biopsySiteChartOptions = {
-    chart : {
-        renderTo : null,
-        plotBackgroundColor : null,
-        plotBorderWidth : null,
-        plotShadow : false
-    },
+    chart : chartOptions,
     title : {
         text : 'Number of Samples by Biopsy Site'
     },
-    tooltip : {
-        pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
-    },
-    plotOptions : {
-        pie : {
-            allowPointSelect : true,
-            cursor : 'pointer',
-            dataLabels : {
-                enabled : true,
-                color : '#000000',
-                connectorColor : '#000000',
-                format : '<b>{point.name}</b>: {point.y}'
-            }
-        }
-    },
+    tooltip : tooltipOptions,
+    plotOptions : plotOptions,
     series : [{
         type : 'pie',
         name : 'number of samples',
