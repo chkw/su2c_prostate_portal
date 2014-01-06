@@ -65,7 +65,7 @@ var tooltipOptions = {
     pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
 };
 
-var chartOptionsTemplate = {
+var pieChartOptionsTemplate = {
     chart : chartOptions,
     title : {
         text : ''
@@ -121,6 +121,7 @@ function setupChartOptions(renderTo, seriesData, title, chartOptions) {
     return chartOptions;
 }
 
+// TODO onload
 window.onload = function() {
     var cohort = setCohortData(dataUrl);
 
@@ -136,8 +137,8 @@ window.onload = function() {
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
 
-    var studySiteChartOptions = chartOptionsTemplate;
-    var biopsySiteChartOptions = chartOptionsTemplate;
+    var studySiteChartOptions = pieChartOptionsTemplate;
+    var biopsySiteChartOptions = pieChartOptionsTemplate;
 
     setupChartOptions("chart01", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     var chart1 = new Highcharts.Chart(studySiteChartOptions);
