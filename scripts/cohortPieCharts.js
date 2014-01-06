@@ -133,6 +133,8 @@ window.onload = function() {
         value : 'Bone'
     }];
 
+    selectionCriteria.splice(0, selectionCriteria.length);
+
     var selectedIds = cohort.selectIds(selectionCriteria);
 
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
