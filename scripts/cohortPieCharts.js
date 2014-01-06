@@ -125,14 +125,15 @@ function setupChartOptions(renderTo, seriesData, title, chartOptions) {
 window.onload = function() {
     var cohort = setCohortData(dataUrl);
 
-    var ids = cohort.getAllPatientIds();
+    var selectionCriteria = [{
+        feature : 'studySite',
+        value : 'Mt. Zion'
+    }, {
+        feature : 'biopsySite',
+        value : 'Bone'
+    }];
 
-    var selectedIds = cohort.selectPatients(ids, 'studySite', 'Mt. Zion');
-    ids = selectedIds;
-    selectedIds = cohort.selectPatients(ids, 'biopsySite', 'Bone');
-    console.log(JSON.stringify(selectedIds));
-
-    selectedIds = cohort.getAllPatientIds();
+    var selectedIds = cohort.selectIds(selectionCriteria);
 
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');

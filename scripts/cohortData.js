@@ -101,20 +101,34 @@ function cohortData(cohortJson) {
         }
     };
 
-    /**
-     * From the specified ID list, select only the patients by the specified parameters.  selectBy is one of ['studySite', 'biopsySite'].
+    /*
+     *Select the IDs for drawing charts.  selectionCriteria is an Array of objects{feature,value}.
      */
-    this.selectPatients = function(startingIds, selectBy, selectVal) {
+    this.selectIds = function(selectionCriteria) {
+        var ids = this.getAllPatientIds();
+        for (var i in selectionCriteria) {
+            var feature = selectionCriteria[i]["feature"];
+            var value = selectionCriteria[i]["value"];
+
+            ids = this.selectPatients(ids, feature, value);
+        }
+        return ids;
+    };
+
+    /**
+     * From the specified ID list, select only the patients by the specified parameters.  feature is one of ['studySite', 'biopsySite'].
+     */
+    this.selectPatients = function(startingIds, feature, value) {
         var keptIds = new Array();
         for (var i in startingIds) {
             var id = startingIds[i];
             var patientVal = '__NOT_SET__';
-            if (selectBy == 'studySite') {
+            if (feature.toLowerCase() === 'studysite') {
                 patientVal = this.getPatient(id).getStudySite();
-            } else if (selectBy == 'biopsySite') {
+            } else if (feature.toLowerCase() === 'biopsysite') {
                 patientVal = this.getPatient(id).getBiopsySite();
             }
-            if ((patientVal != '__NOT_SET__') && (patientVal == selectVal)) {
+            if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);
             }
         }
