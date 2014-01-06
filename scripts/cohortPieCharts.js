@@ -100,12 +100,19 @@ var biopsySiteChartOptions = {
     }]
 };
 
-function addHighChart(elementId, chartOptions) {
-    $(function() {
-        $("#" + elementId).empty();
-        $("#" + elementId).highcharts(chartOptions);
-    });
+/**
+ * Set the renderTo attribute of the chart.
+ * @param {Object} elementId
+ * @param {Object} chartOptions
+ */
+function setChartRenderTo(elementId, chartOptions) {
+    chartOptions["chart"]["renderTo"] = elementId;
 }
 
-addHighChart("chart01", studySiteChartOptions);
-addHighChart("chart02", biopsySiteChartOptions);
+window.onload = function() {
+    setChartRenderTo("chart01", studySiteChartOptions);
+    var chart1 = new Highcharts.Chart(studySiteChartOptions);
+
+    setChartRenderTo("chart02", biopsySiteChartOptions);
+    var chart2 = new Highcharts.Chart(biopsySiteChartOptions);
+};
