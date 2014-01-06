@@ -107,6 +107,20 @@ function setChartTitle(title, chartOptions) {
     chartOptions["title"]["text"] = title;
 }
 
+/**
+ * Setup chartOptions... returns the chartOptions.
+ * @param {Object} renderTo
+ * @param {Object} seriesData
+ * @param {Object} title
+ * @param {Object} chartOptions
+ */
+function setupChartOptions(renderTo, seriesData, title, chartOptions) {
+    setChartRenderTo(renderTo, chartOptions);
+    setChartSeries(seriesData, chartOptions);
+    setChartTitle(title, chartOptions);
+    return chartOptions;
+}
+
 window.onload = function() {
     var cohort = setCohortData(dataUrl);
 
@@ -125,13 +139,9 @@ window.onload = function() {
     var studySiteChartOptions = chartOptionsTemplate;
     var biopsySiteChartOptions = chartOptionsTemplate;
 
-    setChartRenderTo("chart01", studySiteChartOptions);
-    setChartSeries(studySiteData, studySiteChartOptions);
-    setChartTitle('Number of Samples by Study Site', studySiteChartOptions);
+    setupChartOptions("chart01", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     var chart1 = new Highcharts.Chart(studySiteChartOptions);
 
-    setChartRenderTo("chart02", biopsySiteChartOptions);
-    setChartSeries(biopsySiteData, biopsySiteChartOptions);
-    setChartTitle('Number of Samples by Biopsy Site', biopsySiteChartOptions);
+    setupChartOptions("chart02", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     var chart2 = new Highcharts.Chart(biopsySiteChartOptions);
 };
