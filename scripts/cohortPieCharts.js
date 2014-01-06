@@ -1,3 +1,9 @@
+/**
+ * chrisw@soe.ucsc.edu
+ * December 19, 2013
+ * Draw pie charts using highcharts (http://www.highcharts.com/).
+ */
+
 var dataUrl = 'data/cohort.json';
 
 var xmlHttp = null;
