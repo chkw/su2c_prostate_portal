@@ -42,7 +42,7 @@ var studySiteChartOptions = {
         text : 'Number of Samples by Study Site'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.y}</b>'
+        pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
     },
     plotOptions : {
         pie : {
@@ -75,7 +75,7 @@ var biopsySiteChartOptions = {
         text : 'Number of Samples by Biopsy Site'
     },
     tooltip : {
-        pointFormat : '{series.name}: <b>{point.y}</b>'
+        pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
     },
     plotOptions : {
         pie : {
