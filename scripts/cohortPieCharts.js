@@ -6,25 +6,20 @@
 
 var dataUrl = 'data/cohort.json';
 
-var xmlHttp = null;
-xmlHttp = new XMLHttpRequest();
-xmlHttp.open("GET", dataUrl, false);
-xmlHttp.send(null);
-var data = xmlHttp.responseText;
+/**
+ * get the JSON data to create a cohortData object.
+ */
+function setCohortData(url) {
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", dataUrl, false);
+    xmlHttp.send(null);
+    var data = xmlHttp.responseText;
 
-var cohort = new cohortData(data);
+    var cohort = new cohortData(data);
 
-var ids = cohort.getAllPatientIds();
-
-var selectedIds = cohort.selectPatients(ids, 'studySite', 'Mt. Zion');
-ids = selectedIds;
-selectedIds = cohort.selectPatients(ids, 'biopsySite', 'Bone');
-console.log(JSON.stringify(selectedIds));
-
-selectedIds = cohort.getAllPatientIds();
-
-var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
-var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
+    return cohort;
+}
 
 Highcharts.setOptions({
     chart : {
@@ -70,32 +65,17 @@ var tooltipOptions = {
     pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
 };
 
-var studySiteChartOptions = {
+var chartOptionsTemplate = {
     chart : chartOptions,
     title : {
-        text : 'Number of Samples by Study Site'
+        text : ''
     },
     tooltip : tooltipOptions,
     plotOptions : plotOptions,
     series : [{
         type : 'pie',
         name : 'number of samples',
-        data : studySiteData,
-        showInLegend : true
-    }]
-};
-
-var biopsySiteChartOptions = {
-    chart : chartOptions,
-    title : {
-        text : 'Number of Samples by Biopsy Site'
-    },
-    tooltip : tooltipOptions,
-    plotOptions : plotOptions,
-    series : [{
-        type : 'pie',
-        name : 'number of samples',
-        data : biopsySiteData,
+        data : null,
         showInLegend : true
     }]
 };
@@ -109,10 +89,49 @@ function setChartRenderTo(elementId, chartOptions) {
     chartOptions["chart"]["renderTo"] = elementId;
 }
 
+/**
+ * Set the chart series.
+ * @param {Object} seriesData
+ * @param {Object} chart
+ */
+function setChartSeries(seriesData, chartOptions) {
+    chartOptions["series"][0]["data"] = seriesData;
+}
+
+/**
+ * Set the chart title.
+ * @param {Object} title
+ * @param {Object} chartOptions
+ */
+function setChartTitle(title, chartOptions) {
+    chartOptions["title"]["text"] = title;
+}
+
 window.onload = function() {
+    var cohort = setCohortData(dataUrl);
+
+    var ids = cohort.getAllPatientIds();
+
+    var selectedIds = cohort.selectPatients(ids, 'studySite', 'Mt. Zion');
+    ids = selectedIds;
+    selectedIds = cohort.selectPatients(ids, 'biopsySite', 'Bone');
+    console.log(JSON.stringify(selectedIds));
+
+    selectedIds = cohort.getAllPatientIds();
+
+    var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
+    var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
+
+    var studySiteChartOptions = chartOptionsTemplate;
+    var biopsySiteChartOptions = chartOptionsTemplate;
+
     setChartRenderTo("chart01", studySiteChartOptions);
+    setChartSeries(studySiteData, studySiteChartOptions);
+    setChartTitle('Number of Samples by Study Site', studySiteChartOptions);
     var chart1 = new Highcharts.Chart(studySiteChartOptions);
 
     setChartRenderTo("chart02", biopsySiteChartOptions);
+    setChartSeries(biopsySiteData, biopsySiteChartOptions);
+    setChartTitle('Number of Samples by Biopsy Site', biopsySiteChartOptions);
     var chart2 = new Highcharts.Chart(biopsySiteChartOptions);
 };
