@@ -6,6 +6,29 @@
  */
 
 /**
+ * Object for use with cohortData.selectIds(selectionCriteria.getCriteria()) .
+ */
+function selectionCriteria() {
+    this.criteria = new Array();
+
+    this.getCriteria = function() {
+        return this.criteria;
+    };
+
+    this.addCriteria = function(feature, value) {
+        var criteria = {
+            "feature" : feature,
+            "value" : value
+        };
+        this.criteria.push(criteria);
+    };
+
+    this.clearCriteria = function() {
+        this.criteria.splice(0, this.criteria.length);
+    };
+}
+
+/**
  * Data about a single patient.
  * @param {Object} data
  */
@@ -106,6 +129,9 @@ function cohortData(cohortJson) {
      */
     this.selectIds = function(selectionCriteria) {
         var ids = this.getAllPatientIds();
+        if (selectionCriteria.length == 0) {
+            return ids;
+        }
         for (var i in selectionCriteria) {
             var feature = selectionCriteria[i]["feature"];
             var value = selectionCriteria[i]["value"];

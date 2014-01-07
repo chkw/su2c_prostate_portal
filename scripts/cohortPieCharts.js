@@ -121,21 +121,20 @@ function setupChartOptions(renderTo, seriesData, title, chartOptions) {
     return chartOptions;
 }
 
+var studySiteChart = null;
+var biopsySiteChart = null;
+var selectionCriteria = new selectionCriteria();
+
 // TODO onload
 window.onload = function() {
     var cohort = setCohortData(dataUrl);
 
-    var selectionCriteria = [{
-        feature : 'studySite',
-        value : 'Mt. Zion'
-    }, {
-        feature : 'biopsySite',
-        value : 'Bone'
-    }];
+    selectionCriteria.addCriteria("studySite", "Mt. Zion");
+    selectionCriteria.addCriteria("biopsySite", "Bone");
 
-    selectionCriteria.splice(0, selectionCriteria.length);
+    selectionCriteria.clearCriteria();
 
-    var selectedIds = cohort.selectIds(selectionCriteria);
+    var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
@@ -144,8 +143,8 @@ window.onload = function() {
     var biopsySiteChartOptions = pieChartOptionsTemplate;
 
     setupChartOptions("chart01", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
-    var chart1 = new Highcharts.Chart(studySiteChartOptions);
+    studySiteChart = new Highcharts.Chart(studySiteChartOptions);
 
     setupChartOptions("chart02", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
-    var chart2 = new Highcharts.Chart(biopsySiteChartOptions);
+    biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 };

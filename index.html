@@ -1,99 +1,100 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>SU2C WCDT Portal</title>
-		<meta charset="utf-8">
+    <head>
+        <title>SU2C WCDT Portal</title>
+        <meta charset="utf-8">
 
-		<script type="text/javascript" src="scripts/jquery-1.10.2.min.js"></script>
-		<!--
-		<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-		<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		-->
-		<script type="text/javascript" src="scripts/highcharts.js"></script>
+        <script type="text/javascript" src="scripts/jquery-1.10.2.min.js"></script>
+        <!--
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        -->
+        <script type="text/javascript" src="scripts/highcharts.js"></script>
 
-		<script type="text/javascript" src="scripts/cohortData.js"></script>
+        <script type="text/javascript" src="scripts/cohortData.js"></script>
 
         <script type="text/javascript" src="scripts/cohortPieCharts.js"></script>
 
-		<noscript>
-			<div align="center">
-				<p style="color:black;background-color:red;font-size:18pt">
-					This website requires JavaScript.  Please turn on JavaScript and then <a href="">try it again</a>.
-				</p>
-			</div>
-		</noscript>
-		<link rel="stylesheet" href="css/main.css" type="text/css" />
-		<link href="images/favicon.ico" rel="icon" type="image/x-icon">
-	</head>
-	<body>
-		<header class="header">
-			<a href="http://www.standup2cancer.org/" target="su2c_portal"><img height="160px" src="images/Stand_up_to_Cancer_logo.svg" alt="SU2C Logo"></a>
-			<p>
-				This is the header
-			</p>
-		</header>
-		<div class="content wrap">
-			<article>
-				<section class="first">
-					<h2>WCDT Sites</h2>
-					<p>
-						Put some information about team members here.  This should include some links to lab websites and maybe even some logos/photos.
-					</p>
-					<ul>
-						<li>
-							UCSF
-						</li>
-						<li>
-							UCLA
-						</li>
-						<li>
-							UBC
-						</li>
-						<li>
-							Davis
-						</li>
-						<li>
-							OHSU
-						</li>
-						<li>
-							UCSC
-						</li>
-					</ul>
-				</section>
-				<section class="middle">
-					<h2>Data Release 0</h2>
-					<h3>December 19, 2013</h3>
-					<p>
-						Put some charts/tables about the release here.  On our <a href="http://dcc.icgc.org/" target="icgc_portal">benchmark site</a>, nearly every chart and table is a search control.
-					</p>
-					<div id="chart01"></div>
-					<div id="chart02"></div>
-				</section>
-				<section class="last">
-					<h2>News</h2>
-					<article>
-						<h3> News Item 3 </h3>
-						<p>
-							A conference happened.
-						</p>
-					</article>
-					<article>
-						<h3> News Item 2 </h3>
-						<p>
-							Something really great happened.
-						</p>
-					</article>
-					<article>
-						<h3> News Item 1 </h3>
-						<p>
-							Something good happened.
-						</p>
-					</article>
-				</section>
-			</article>
-		</div>
-		<footer class="footer">
-			This is the footer.
-		</footer>
-	</body>
+        <noscript>
+            <div align="center">
+                <p style="color:black;background-color:red;font-size:18pt">
+                    This website requires JavaScript.  Please turn on JavaScript and then <a href="">try it again</a>.
+                </p>
+            </div>
+        </noscript>
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <link href="images/favicon.ico" rel="icon" type="image/x-icon">
+    </head>
+    <body>
+        <header class="header">
+            <a href="http://www.standup2cancer.org/" target="su2c_portal"><img height="160px" src="images/Stand_up_to_Cancer_logo.svg" alt="SU2C Logo"></a>
+            <p>
+                This is the header
+            </p>
+        </header>
+        <div class="content wrap">
+            <article>
+                <section class="first">
+                    <h2>WCDT Sites</h2>
+                    <p>
+                        Put some information about team members here.  This should include some links to lab websites and maybe even some logos/photos.
+                    </p>
+                    <ul>
+                        <li>
+                            UCSF
+                        </li>
+                        <li>
+                            UCLA
+                        </li>
+                        <li>
+                            UBC
+                        </li>
+                        <li>
+                            Davis
+                        </li>
+                        <li>
+                            OHSU
+                        </li>
+                        <li>
+                            UCSC
+                        </li>
+                    </ul>
+                </section>
+                <section class="middle">
+                    <h2>Data Release 0</h2>
+                    <h3>December 19, 2013</h3>
+                    <p>
+                        Put some charts/tables about the release here.  On our <a href="http://dcc.icgc.org/" target="icgc_portal">benchmark site</a>, nearly every chart and table is a search control.
+                    </p>
+                    <div id="chartCrumbs"></div>
+                    <div id="chart01"></div>
+                    <div id="chart02"></div>
+                </section>
+                <section class="last">
+                    <h2>News</h2>
+                    <article>
+                        <h3> News Item 3 </h3>
+                        <p>
+                            A conference happened.
+                        </p>
+                    </article>
+                    <article>
+                        <h3> News Item 2 </h3>
+                        <p>
+                            Something really great happened.
+                        </p>
+                    </article>
+                    <article>
+                        <h3> News Item 1 </h3>
+                        <p>
+                            Something good happened.
+                        </p>
+                    </article>
+                </section>
+            </article>
+        </div>
+        <footer class="footer">
+            This is the footer.
+        </footer>
+    </body>
 </html>
