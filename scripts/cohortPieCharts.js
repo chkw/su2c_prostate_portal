@@ -124,10 +124,10 @@ function setupChartOptions(renderTo, seriesData, title, chartOptions) {
 var studySiteChart = null;
 var biopsySiteChart = null;
 var selectionCriteria = new selectionCriteria();
+var cohort = setCohortData(dataUrl);
 
 // TODO onload
 window.onload = function() {
-    var cohort = setCohortData(dataUrl);
 
     selectionCriteria.addCriteria("studySite", "Mt. Zion");
     selectionCriteria.addCriteria("biopsySite", "Bone");
