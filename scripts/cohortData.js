@@ -102,7 +102,7 @@ function cohortData(cohortJson) {
     };
 
     /*
-     *Select the IDs for drawing charts.  selectionCriteria is an Array of objects{feature,value}.
+     *Select the IDs based on multiple criteria.  selectionCriteria is an Array of objects{feature,value}.
      */
     this.selectIds = function(selectionCriteria) {
         var ids = this.getAllPatientIds();
