@@ -126,23 +126,27 @@ var biopsySiteChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = setCohortData(dataUrl);
 
-function createCrumbButton() {
-    var buttonElement = $("<button class='crumbButton'>a new button</button>").hover(function() {
+function createCrumbButton(feature, value) {
+    var buttonElement = $("<button class='crumbButton'>" + feature + "<br>" + value + "</button>").hover(function() {
         console.log('hover in');
     }, function() {
         console.log('hover out');
     }).click(function() {
         console.log("click!");
     });
-
     return buttonElement;
 }
 
-function updateChartCrumbs() {
+function updateChartCrumbs(selectionCriteria) {
     var id = "chartCrumbs";
     var e = document.getElementById(id);
     e.innerHTML = "crumbs go here";
-    createCrumbButton().appendTo(e);
+    var criteria = selectionCriteria.getCriteria();
+    for (var i in criteria) {
+        var feature = criteria[i]["feature"];
+        var value = criteria[i]["value"];
+        createCrumbButton(feature, value).appendTo(e);
+    }
 }
 
 // TODO onload
@@ -167,5 +171,5 @@ window.onload = function() {
     setupChartOptions("chart02", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 
-    updateChartCrumbs();
+    updateChartCrumbs(selectionCriteria);
 };
