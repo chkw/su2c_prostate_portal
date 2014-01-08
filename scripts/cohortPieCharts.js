@@ -54,7 +54,9 @@ var plotOptions = {
         point : {
             events : {
                 click : function() {
-                    console.log('clicked the slice for: ' + this.name);
+                    var feature = this.series.name;
+                    var value = this.name;
+                    console.log("clicked: " + feature + ' = ' + value);
                 }
             }
         }
@@ -74,7 +76,7 @@ var pieChartOptionsTemplate = {
     plotOptions : plotOptions,
     series : [{
         type : 'pie',
-        name : 'number of samples',
+        name : null,
         data : null,
         showInLegend : true
     }]
@@ -91,10 +93,12 @@ function setChartRenderTo(elementId, chartOptions) {
 
 /**
  * Set the chart series.
+ * @param {Object} seriesName
  * @param {Object} seriesData
  * @param {Object} chart
  */
-function setChartSeries(seriesData, chartOptions) {
+function setChartSeries(seriesName, seriesData, chartOptions) {
+    chartOptions["series"][0]["name"] = seriesName;
     chartOptions["series"][0]["data"] = seriesData;
 }
 
@@ -110,13 +114,14 @@ function setChartTitle(title, chartOptions) {
 /**
  * Setup chartOptions... returns the chartOptions.
  * @param {Object} renderTo
+ * @param {Object} seriesName
  * @param {Object} seriesData
  * @param {Object} title
  * @param {Object} chartOptions
  */
-function setupChartOptions(renderTo, seriesData, title, chartOptions) {
+function setupChartOptions(renderTo, seriesName, seriesData, title, chartOptions) {
     setChartRenderTo(renderTo, chartOptions);
-    setChartSeries(seriesData, chartOptions);
+    setChartSeries(seriesName, seriesData, chartOptions);
     setChartTitle(title, chartOptions);
     return chartOptions;
 }
@@ -187,10 +192,10 @@ function initializeCharts() {
     var studySiteChartOptions = pieChartOptionsTemplate;
     var biopsySiteChartOptions = pieChartOptionsTemplate;
 
-    setupChartOptions("chart01", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
+    setupChartOptions("chart01", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     studySiteChart = new Highcharts.Chart(studySiteChartOptions);
 
-    setupChartOptions("chart02", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
+    setupChartOptions("chart02", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 
     updateChartCrumbs(selectionCriteria);
