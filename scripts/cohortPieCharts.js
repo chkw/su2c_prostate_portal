@@ -53,10 +53,12 @@ var plotOptions = {
         },
         point : {
             events : {
+                // click pie slice to add sample selection criteria & redraw charts
                 click : function() {
                     var feature = this.series.name;
                     var value = this.name;
-                    console.log("clicked: " + feature + ' = ' + value);
+                    selectionCriteria.addCriteria(feature, value);
+                    redrawCharts();
                 }
             }
         }
@@ -166,9 +168,10 @@ function setNewChartData(chartObject, chartData) {
     chartObject.series[0].setData(chartData);
 }
 
+/**
+ * Redraw pie charts using the current selectionCriteria object.
+ */
 function redrawCharts() {
-    console.log("redrawCharts()");
-
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
     var data = cohort.getPatientCounts(selectedIds, 'studySite');
@@ -204,8 +207,8 @@ function initializeCharts() {
 // TODO onload
 window.onload = function() {
 
-    selectionCriteria.addCriteria("studySite", "Mt. Zion");
-    selectionCriteria.addCriteria("biopsySite", "Bone");
+    // selectionCriteria.addCriteria("studySite", "Mt. Zion");
+    // selectionCriteria.addCriteria("biopsySite", "Bone");
 
     // selectionCriteria.clearCriteria();
 
