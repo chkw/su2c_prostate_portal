@@ -126,9 +126,23 @@ var biopsySiteChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = setCohortData(dataUrl);
 
+function createCrumbButton() {
+    var buttonElement = $("<button class='crumbButton'>a new button</button>").hover(function() {
+        console.log('hover in');
+    }, function() {
+        console.log('hover out');
+    }).click(function() {
+        console.log("click!");
+    });
+
+    return buttonElement;
+}
+
 function updateChartCrumbs() {
-    var e = document.getElementById('chartCrumbs');
+    var id = "chartCrumbs";
+    var e = document.getElementById(id);
     e.innerHTML = "crumbs go here";
+    createCrumbButton().appendTo(e);
 }
 
 // TODO onload
