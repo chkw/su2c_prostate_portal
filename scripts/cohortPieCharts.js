@@ -133,6 +133,8 @@ function createCrumbButton(feature, value) {
         console.log('hover out');
     }).click(function() {
         console.log("click!");
+        selectionCriteria.clearCriteria();
+        redrawCharts();
     });
     return buttonElement;
 }
@@ -149,13 +151,30 @@ function updateChartCrumbs(selectionCriteria) {
     }
 }
 
+function redrawCharts() {
+    console.log("redrawCharts()");
+
+    var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
+
+    var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
+    var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
+
+    studySiteChart.series[0].setData(studySiteData);
+    biopsySiteChart.series[0].setData(biopsySiteData);
+
+    studySiteChart.redraw();
+    biopsySiteChart.redraw();
+
+    updateChartCrumbs(selectionCriteria);
+}
+
 // TODO onload
 window.onload = function() {
 
     selectionCriteria.addCriteria("studySite", "Mt. Zion");
     selectionCriteria.addCriteria("biopsySite", "Bone");
 
-    selectionCriteria.clearCriteria();
+    // selectionCriteria.clearCriteria();
 
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
