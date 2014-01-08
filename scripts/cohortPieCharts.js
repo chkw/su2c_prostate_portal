@@ -151,16 +151,26 @@ function updateChartCrumbs(selectionCriteria) {
     }
 }
 
+/**
+ * Set new series data directly on the chart instead of via chartOptions.
+ * @param {Object} chartObject
+ * @param {Object} chartData
+ */
+function setNewChartData(chartObject, chartData) {
+    chartObject.series[0].data.length = 0;
+    chartObject.series[0].setData(chartData);
+}
+
 function redrawCharts() {
     console.log("redrawCharts()");
 
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
-    var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
+    var data = cohort.getPatientCounts(selectedIds, 'studySite');
+    setNewChartData(studySiteChart, data);
 
-    studySiteChart.series[0].setData(studySiteData);
-    biopsySiteChart.series[0].setData(biopsySiteData);
+    data = cohort.getPatientCounts(selectedIds, 'biopsySite');
+    setNewChartData(biopsySiteChart, data);
 
     studySiteChart.redraw();
     biopsySiteChart.redraw();
@@ -168,14 +178,7 @@ function redrawCharts() {
     updateChartCrumbs(selectionCriteria);
 }
 
-// TODO onload
-window.onload = function() {
-
-    selectionCriteria.addCriteria("studySite", "Mt. Zion");
-    selectionCriteria.addCriteria("biopsySite", "Bone");
-
-    // selectionCriteria.clearCriteria();
-
+function initializeCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
@@ -191,4 +194,15 @@ window.onload = function() {
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 
     updateChartCrumbs(selectionCriteria);
+}
+
+// TODO onload
+window.onload = function() {
+
+    selectionCriteria.addCriteria("studySite", "Mt. Zion");
+    selectionCriteria.addCriteria("biopsySite", "Bone");
+
+    // selectionCriteria.clearCriteria();
+
+    initializeCharts();
 };
