@@ -44,3 +44,6 @@ article.last {
 .pieChart {
     height: 300px
 }
+#chartCrumbs {
+    vertical-align: bottom
+}

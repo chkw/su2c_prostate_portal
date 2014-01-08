@@ -148,7 +148,7 @@ function createCrumbButton(feature, value) {
 function updateChartCrumbs(selectionCriteria) {
     var id = "chartCrumbs";
     var e = document.getElementById(id);
-    e.innerHTML = "crumbs go here";
+    e.innerHTML = "applied filters: ";
     var criteria = selectionCriteria.getCriteria();
     for (var i in criteria) {
         var feature = criteria[i]["feature"];
