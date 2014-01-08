@@ -126,6 +126,11 @@ var biopsySiteChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = setCohortData(dataUrl);
 
+function updateChartCrumbs() {
+    var e = document.getElementById('chartCrumbs');
+    e.innerHTML = "crumbs go here";
+}
+
 // TODO onload
 window.onload = function() {
 
@@ -147,4 +152,6 @@ window.onload = function() {
 
     setupChartOptions("chart02", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
+
+    updateChartCrumbs();
 };
