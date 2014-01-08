@@ -139,8 +139,7 @@ function createCrumbButton(feature, value) {
     }, function() {
         console.log('hover out');
     }).click(function() {
-        console.log("click!");
-        selectionCriteria.clearCriteria();
+        selectionCriteria.removeCriteria(feature, value);
         redrawCharts();
     });
     return buttonElement;

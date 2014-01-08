@@ -23,6 +23,17 @@ function selectionCriteria() {
         this.criteria.push(criteria);
     };
 
+    // TODO currently removes only first match... better to remove ALL matches
+    this.removeCriteria = function(feature, value) {
+        for (var i = 0; i < this.criteria.length; i++) {
+            if ((this.criteria[i]["feature"] == feature) && (this.criteria[i]["value"] == value)) {
+                console.log('found element to remove');
+                this.criteria.splice(i, 1);
+                break;
+            }
+        }
+    };
+
     this.clearCriteria = function() {
         this.criteria.splice(0, this.criteria.length);
     };
