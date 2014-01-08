@@ -133,18 +133,24 @@ var biopsySiteChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = setCohortData(dataUrl);
 
+/**
+ * Create a button element to remove a filter from selectionCriteria.
+ */
 function createCrumbButton(feature, value) {
-    var buttonElement = $("<button class='crumbButton'>" + feature + "<br>" + value + "</button>").hover(function() {
-        console.log('hover in');
+    var innerHtml = feature + "<br>" + value;
+    var buttonElement = $("<button class='crumbButton'>" + innerHtml + "</button>").hover(function() {
+        this.innerHTML = "<s>" + innerHtml + "</s>";
     }, function() {
-        console.log('hover out');
+        this.innerHTML = innerHtml;
     }).click(function() {
         selectionCriteria.removeCriteria(feature, value);
         redrawCharts();
     });
     return buttonElement;
 }
-
+/**
+ * Update the chart crumbs.
+ */
 function updateChartCrumbs(selectionCriteria) {
     var id = "chartCrumbs";
     var e = document.getElementById(id);
