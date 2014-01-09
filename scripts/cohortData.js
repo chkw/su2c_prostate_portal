@@ -81,23 +81,6 @@ function patientData(data) {
     };
 
     /**
-     * Get the prior drugs.
-     * ["attributes"]["SU2C Prior TX V2"]["Drug Name"]
-     */
-    this.getPriorDrugs = function() {
-        if (this.data == null) {
-            return null;
-        } else if (this.data["attributes"] == null) {
-            return null;
-        } else if (this.data["attributes"]["SU2C Prior TX V2"] == null) {
-            return null;
-        } else {
-            var val = this.data["attributes"]["SU2C Prior TX V2"]["Drug Name"];
-            return JSON.stringify(val);
-        }
-    };
-
-    /**
      * Get the subsequent drug.
      * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
      */
@@ -146,11 +129,12 @@ function cohortData(cohortJson) {
         for (var i in ids) {
             var id = ids[i];
             var val = '__NOT_SET__';
-            if (feature == 'studySite') {
+            feature = feature.toLowerCase();
+            if (feature == 'studysite') {
                 val = this.getPatient(id).getStudySite();
-            } else if (feature == 'biopsySite') {
+            } else if (feature == 'biopsysite') {
                 val = this.getPatient(id).getBiopsySite();
-            } else if (feature == 'subsequentDrugs') {
+            } else if (feature == 'subsequentdrugs') {
                 val = this.getPatient(id).getSubsequentDrugs();
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
@@ -198,11 +182,12 @@ function cohortData(cohortJson) {
         for (var i in startingIds) {
             var id = startingIds[i];
             var patientVal = '__NOT_SET__';
-            if (feature.toLowerCase() === 'studysite') {
+            feature = feature.toLowerCase();
+            if (feature === 'studysite') {
                 patientVal = this.getPatient(id).getStudySite();
-            } else if (feature.toLowerCase() === 'biopsysite') {
+            } else if (feature === 'biopsysite') {
                 patientVal = this.getPatient(id).getBiopsySite();
-            } else if (feature.toLowerCase() === 'subsequentdrugs') {
+            } else if (feature === 'subsequentdrugs') {
                 patientVal = this.getPatient(id).getSubsequentDrugs();
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
