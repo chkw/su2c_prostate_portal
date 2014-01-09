@@ -5,6 +5,7 @@
  */
 
 var dataUrl = 'data/cohort.json';
+// var dataUrl = 'data/cohort_dec28.json';
 
 /**
  * get the JSON data to create a cohortData object.
@@ -130,6 +131,7 @@ function setupChartOptions(renderTo, seriesName, seriesData, title, chartOptions
 
 var studySiteChart = null;
 var biopsySiteChart = null;
+var subsequentDrugsChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = setCohortData(dataUrl);
 
@@ -148,6 +150,7 @@ function createCrumbButton(feature, value) {
     });
     return buttonElement;
 }
+
 /**
  * Update the chart crumbs.
  */
@@ -185,8 +188,12 @@ function redrawCharts() {
     data = cohort.getPatientCounts(selectedIds, 'biopsySite');
     setNewChartData(biopsySiteChart, data);
 
+    data = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
+    setNewChartData(subsequentDrugsChart, data);
+
     studySiteChart.redraw();
     biopsySiteChart.redraw();
+    subsequentDrugsChart.redraw();
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -196,15 +203,20 @@ function initializeCharts() {
 
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
+    var subsequentDrugsData = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
 
     var studySiteChartOptions = pieChartOptionsTemplate;
     var biopsySiteChartOptions = pieChartOptionsTemplate;
+    var subsequentDrugsChartOptions = pieChartOptionsTemplate;
 
     setupChartOptions("chart01", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     studySiteChart = new Highcharts.Chart(studySiteChartOptions);
 
     setupChartOptions("chart02", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
+
+    setupChartOptions("chart03", "subsequentDrugs", subsequentDrugsData, "Number of Samples by Subsequent Drugs", subsequentDrugsChartOptions);
+    subsequentDrugsChart = new Highcharts.Chart(subsequentDrugsChartOptions);
 
     updateChartCrumbs(selectionCriteria);
 }

@@ -48,6 +48,7 @@ function patientData(data) {
 
     /**
      * Get the study site.
+     * ["attributes"]["Demographics"]["Study Site"]
      */
     this.getStudySite = function() {
         if (this.data == null) {
@@ -64,6 +65,7 @@ function patientData(data) {
 
     /**
      * Get the biopsy site.
+     * ["attributes"]["SU2C Biopsy V2"]["Site"]
      */
     this.getBiopsySite = function() {
         if (this.data == null) {
@@ -74,6 +76,40 @@ function patientData(data) {
             return null;
         } else {
             var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
+            return val;
+        }
+    };
+
+    /**
+     * Get the prior drugs.
+     * ["attributes"]["SU2C Prior TX V2"]["Drug Name"]
+     */
+    this.getPriorDrugs = function() {
+        if (this.data == null) {
+            return null;
+        } else if (this.data["attributes"] == null) {
+            return null;
+        } else if (this.data["attributes"]["SU2C Prior TX V2"] == null) {
+            return null;
+        } else {
+            var val = this.data["attributes"]["SU2C Prior TX V2"]["Drug Name"];
+            return JSON.stringify(val);
+        }
+    };
+
+    /**
+     * Get the subsequent drug.
+     * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
+     */
+    this.getSubsequentDrugs = function() {
+        if (this.data == null) {
+            return null;
+        } else if (this.data["attributes"] == null) {
+            return null;
+        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
+            return null;
+        } else {
+            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
             return val;
         }
     };
@@ -114,6 +150,8 @@ function cohortData(cohortJson) {
                 val = this.getPatient(id).getStudySite();
             } else if (feature == 'biopsySite') {
                 val = this.getPatient(id).getBiopsySite();
+            } else if (feature == 'subsequentDrugs') {
+                val = this.getPatient(id).getSubsequentDrugs();
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
                 counts[val] = 0;
@@ -164,6 +202,8 @@ function cohortData(cohortJson) {
                 patientVal = this.getPatient(id).getStudySite();
             } else if (feature.toLowerCase() === 'biopsysite') {
                 patientVal = this.getPatient(id).getBiopsySite();
+            } else if (feature.toLowerCase() === 'subsequentdrugs') {
+                patientVal = this.getPatient(id).getSubsequentDrugs();
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);
