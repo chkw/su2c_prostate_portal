@@ -52,13 +52,32 @@ function patientData(data) {
      */
     this.getStudySite = function() {
         if (this.data == null) {
-            return null;
+            this.data = {
+                "attributes" : {
+                    "demographics" : {
+                        "Study Site" : "unknown"
+                    }
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"] == null) {
-            return null;
+            this.data["attributes"] = {
+                "demographics" : {
+                    "Study Site" : "unknown"
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"]["Demographics"] == null) {
-            return null;
+            this.data["attributes"]["Demographics"] = {
+                "Study Site" : "unknown"
+            };
+            return "unknown";
         } else {
             var val = this.data["attributes"]["Demographics"]["Study Site"];
+            if (val == null) {
+                this.data["attributes"]["Demographics"]["Study Site"] = "unknown";
+                val == "unknown";
+            }
             return val;
         }
     };
@@ -69,13 +88,32 @@ function patientData(data) {
      */
     this.getBiopsySite = function() {
         if (this.data == null) {
-            return null;
+            this.data = {
+                "attributes" : {
+                    "SU2C Biopsy V2" : {
+                        "Site" : "unknown"
+                    }
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"] == null) {
-            return null;
+            this.data["attributes"] = {
+                "SU2C Biopsy V2" : {
+                    "Site" : "unknown"
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"]["SU2C Biopsy V2"] == null) {
-            return null;
+            this.data["attributes"]["SU2C Biopsy V2"] = {
+                "Site" : "unknown"
+            };
+            return "unknown";
         } else {
             var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
+            if (val == null) {
+                this.data["attributes"]["SU2C Biopsy V2"]["Site"] = "unknown";
+                val = "unknown";
+            }
             return val;
         }
     };
@@ -86,13 +124,32 @@ function patientData(data) {
      */
     this.getSubsequentDrugs = function() {
         if (this.data == null) {
-            return null;
+            this.data = {
+                "attributes" : {
+                    "SU2C Subsequent TX V2" : {
+                        "Drug Name" : "unknown"
+                    }
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"] == null) {
-            return null;
+            this.data["attributes"] = {
+                "SU2C Subsequent TX V2" : {
+                    "Drug Name" : "unknown"
+                }
+            };
+            return "unknown";
         } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
-            return null;
+            this.data["attributes"]["SU2C Subsequent TX V2"] = {
+                "Drug Name" : "unknown"
+            };
+            return "unknown";
         } else {
             var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
+            if (val == null || val == "") {
+                this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = "unknown";
+                val = "unknown";
+            }
             return val;
         }
     };
