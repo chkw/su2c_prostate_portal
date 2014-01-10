@@ -4,8 +4,8 @@
  * Draw pie charts using highcharts (http://www.highcharts.com/).
  */
 
-var dataUrl = 'data/cohort.json';
-// var dataUrl = 'data/cohort_dec28.json';
+// var dataUrl = 'data/cohort.json';
+var dataUrl = 'data/cohort_dec28.json';
 
 /**
  * get the JSON data to create a cohortData object.
@@ -17,7 +17,9 @@ function setCohortData(url) {
     xmlHttp.send(null);
     var data = xmlHttp.responseText;
 
-    var cohort = new cohortData(data);
+    var dataJson = JSON && JSON.parse(data) || $.parseJSON(data);
+
+    var cohort = new cohortData(dataJson["contents"]);
 
     return cohort;
 }
