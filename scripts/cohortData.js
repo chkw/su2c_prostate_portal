@@ -46,6 +46,9 @@ function selectionCriteria() {
 function patientData(data) {
     this.data = data;
 
+    var noForm = "no form";
+    var unknown = "unknown";
+
     /**
      * Get the study site.
      * ["attributes"]["Demographics"]["Study Site"]
@@ -55,28 +58,28 @@ function patientData(data) {
             this.data = {
                 "attributes" : {
                     "demographics" : {
-                        "Study Site" : "unknown"
+                        "Study Site" : unknown
                     }
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "demographics" : {
-                    "Study Site" : "unknown"
+                    "Study Site" : noForm
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"]["Demographics"] == null) {
             this.data["attributes"]["Demographics"] = {
-                "Study Site" : "unknown"
+                "Study Site" : noForm
             };
-            return "unknown";
+            return noForm;
         } else {
             var val = this.data["attributes"]["Demographics"]["Study Site"];
             if (val == null) {
-                this.data["attributes"]["Demographics"]["Study Site"] = "unknown";
-                val == "unknown";
+                this.data["attributes"]["Demographics"]["Study Site"] = unknown;
+                val == unknown;
             }
             return val;
         }
@@ -91,28 +94,28 @@ function patientData(data) {
             this.data = {
                 "attributes" : {
                     "SU2C Biopsy V2" : {
-                        "Site" : "unknown"
+                        "Site" : noForm
                     }
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "SU2C Biopsy V2" : {
-                    "Site" : "unknown"
+                    "Site" : noForm
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"]["SU2C Biopsy V2"] == null) {
             this.data["attributes"]["SU2C Biopsy V2"] = {
-                "Site" : "unknown"
+                "Site" : noForm
             };
-            return "unknown";
+            return noForm;
         } else {
             var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
             if (val == null) {
-                this.data["attributes"]["SU2C Biopsy V2"]["Site"] = "unknown";
-                val = "unknown";
+                this.data["attributes"]["SU2C Biopsy V2"]["Site"] = unknown;
+                val = unknown;
             }
             return val;
         }
@@ -127,28 +130,28 @@ function patientData(data) {
             this.data = {
                 "attributes" : {
                     "SU2C Subsequent TX V2" : {
-                        "Drug Name" : "unknown"
+                        "Drug Name" : noForm
                     }
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "SU2C Subsequent TX V2" : {
-                    "Drug Name" : "unknown"
+                    "Drug Name" : noForm
                 }
             };
-            return "unknown";
+            return noForm;
         } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
             this.data["attributes"]["SU2C Subsequent TX V2"] = {
-                "Drug Name" : "unknown"
+                "Drug Name" : noForm
             };
-            return "unknown";
+            return noForm;
         } else {
             var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
             if (val == null || val == "") {
-                this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = "unknown";
-                val = "unknown";
+                this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
+                val = unknown;
             }
             return val;
         }
