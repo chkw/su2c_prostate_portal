@@ -276,9 +276,6 @@ function cohortData(cohortJson) {
                 patientVal = this.getPatient(id).getBiopsySite();
             } else if (feature === 'subsequentdrugs') {
                 patientVal = this.getPatient(id).getSubsequentDrugs();
-                if (patientVal == "unknown") {
-                    console.log(id);
-                }
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);
