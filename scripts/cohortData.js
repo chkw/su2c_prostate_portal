@@ -76,7 +76,7 @@ function patientData(data) {
             };
             return noForm;
         } else {
-            var val = this.data["attributes"]["Demographics"]["Study Site"];
+            var val = this.data["attributes"]["Demographics"]["Study Site"].trim();
             if (val == null) {
                 this.data["attributes"]["Demographics"]["Study Site"] = unknown;
                 val == unknown;
@@ -112,7 +112,7 @@ function patientData(data) {
             };
             return noForm;
         } else {
-            var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
+            var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"].trim();
             if (val == null) {
                 this.data["attributes"]["SU2C Biopsy V2"]["Site"] = unknown;
                 val = unknown;
@@ -148,10 +148,16 @@ function patientData(data) {
             };
             return noForm;
         } else {
-            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
+            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"].trim();
             if (val == null || val == "") {
-                this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
-                val = unknown;
+                var txDetails = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"].trim();
+                if (txDetails != "") {
+                    this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = txDetails;
+                    val = txDetails;
+                } else {
+                    this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
+                    val = unknown;
+                }
             }
             return val;
         }
@@ -249,6 +255,9 @@ function cohortData(cohortJson) {
                 patientVal = this.getPatient(id).getBiopsySite();
             } else if (feature === 'subsequentdrugs') {
                 patientVal = this.getPatient(id).getSubsequentDrugs();
+                if (patientVal == "unknown") {
+                    console.log(id);
+                }
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);
