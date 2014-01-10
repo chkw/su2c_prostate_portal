@@ -159,8 +159,29 @@ function patientData(data) {
                     val = unknown;
                 }
             }
+            val = processDrugList(val);
+            this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = val;
             return val;
         }
+    };
+
+    /**
+     * Process the drug list.  Remove trailing 'acetate'.  Skip 'prednisone'.
+     */
+    processDrugList = function(drugString) {
+        var result = "";
+        var drugs = drugString.split(";");
+        for (var i in drugs) {
+            var drug = drugs[i].trim();
+            drug = drug.replace(/Acetate$/i, '');
+            if (drug.toLowerCase() == "prednisone") {
+                // do nothing, skip it
+            } else {
+                result = result + ";" + drug.trim();
+            }
+        }
+        result = result.replace(/^;/, '');
+        return result;
     };
 }
 
