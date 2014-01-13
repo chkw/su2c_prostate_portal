@@ -4,8 +4,8 @@
  * Draw pie charts using highcharts (http://www.highcharts.com/).
  */
 
-// var dataUrl = 'data/cohort.json';
-var dataUrl = 'data/cohort_dec28.json';
+// var dataUrl = 'data_summary/data/cohort.json';
+var dataUrl = 'data_summary/data/cohort_dec28.json';
 // var dataUrl = "https://su2c-dev.ucsc.edu/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
 
 /**
