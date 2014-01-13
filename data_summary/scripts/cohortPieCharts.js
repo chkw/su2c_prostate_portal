@@ -15,6 +15,10 @@ function setCohortData(url) {
     var xhr = null;
     xhr = new XMLHttpRequest();
     xhr.open("GET", url, false);
+    xhr.onload = function() {
+        var status = xhr.status;
+        console.log("xhr status: " + status);
+    };
     xhr.send(null);
     var response = xhr.responseText;
 
