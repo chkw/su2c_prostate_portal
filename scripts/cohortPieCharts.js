@@ -6,6 +6,7 @@
 
 // var dataUrl = 'data/cohort.json';
 var dataUrl = 'data/cohort_dec28.json';
+// var dataUrl = "https://su2c-dev.ucsc.edu/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
 
 /**
  * get the JSON data to create a cohortData object.
@@ -15,11 +16,14 @@ function setCohortData(url) {
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", dataUrl, false);
     xmlHttp.send(null);
-    var data = xmlHttp.responseText;
+    var response = xmlHttp.responseText;
 
-    var dataJson = JSON && JSON.parse(data) || $.parseJSON(data);
+    var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
 
-    var cohort = new cohortData(dataJson["contents"]);
+    // value of contents is a stringified JSON
+    var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
+
+    var cohort = new cohortData(contents);
 
     return cohort;
 }
@@ -131,12 +135,6 @@ function setupChartOptions(renderTo, seriesName, seriesData, title, chartOptions
     return chartOptions;
 }
 
-var studySiteChart = null;
-var biopsySiteChart = null;
-var subsequentDrugsChart = null;
-var selectionCriteria = new selectionCriteria();
-var cohort = setCohortData(dataUrl);
-
 /**
  * Create a button element to remove a filter from selectionCriteria.
  */
@@ -223,6 +221,12 @@ function initializeCharts() {
     updateChartCrumbs(selectionCriteria);
 }
 
+var studySiteChart = null;
+var biopsySiteChart = null;
+var subsequentDrugsChart = null;
+var selectionCriteria = new selectionCriteria();
+var cohort = null;
+
 // TODO onload
 window.onload = function() {
 
@@ -230,6 +234,8 @@ window.onload = function() {
     // selectionCriteria.addCriteria("biopsySite", "Bone");
 
     // selectionCriteria.clearCriteria();
+
+    cohort = setCohortData(dataUrl);
 
     initializeCharts();
 };
