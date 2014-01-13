@@ -46,7 +46,7 @@ function selectionCriteria() {
 function patientData(data) {
     this.data = data;
 
-    var noForm = "no form";
+    var noForm = "not assessed";
     var unknown = "unknown";
 
     /**
