@@ -187,12 +187,12 @@ function patientData(data) {
 
 /**
  * A group of patient data.
- * @param {Object} cohortJson
+ * @param {Object} deserializedCohortJson
  */
-function cohortData(cohortJson) {
+function cohortData(deserializedCohortJson) {
 
-    // parse the cohort data
-    this.cohort = JSON && JSON.parse(cohortJson) || $.parseJSON(cohortJson);
+    // set the cohort data
+    this.cohort = deserializedCohortJson;
 
     /**
      * Get series data for pie chart from category counts.
