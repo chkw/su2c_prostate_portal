@@ -14,7 +14,7 @@ var dataUrl = 'data/cohort_dec28.json';
 function setCohortData(url) {
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", dataUrl, false);
+    xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
     var response = xmlHttp.responseText;
 
