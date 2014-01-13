@@ -12,11 +12,11 @@ var dataUrl = 'data_summary/data/cohort_dec28.json';
  * get the JSON data to create a cohortData object.
  */
 function setCohortData(url) {
-    var xmlHttp = null;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
-    var response = xmlHttp.responseText;
+    var xhr = null;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", url, false);
+    xhr.send(null);
+    var response = xhr.responseText;
 
     var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
 
