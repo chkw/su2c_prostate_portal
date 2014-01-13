@@ -215,7 +215,7 @@ function initializeCharts() {
     setupChartOptions("chart02", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 
-    setupChartOptions("chart03", "subsequentDrugs", subsequentDrugsData, "Number of Samples by Subsequent Drugs", subsequentDrugsChartOptions);
+    setupChartOptions("chart03", "subsequentDrugs", subsequentDrugsData, "Number of Samples by On-Study Drugs", subsequentDrugsChartOptions);
     subsequentDrugsChart = new Highcharts.Chart(subsequentDrugsChartOptions);
 
     updateChartCrumbs(selectionCriteria);
