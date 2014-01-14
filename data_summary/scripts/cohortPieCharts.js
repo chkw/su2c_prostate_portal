@@ -6,7 +6,8 @@
 
 // var dataUrl = 'data_summary/data/cohort.json';
 var dataUrl = 'data_summary/data/cohort_dec28.json';
-// var dataUrl = "https://su2c-dev.ucsc.edu/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
+// on https://su2c-dev.ucsc.edu/
+//var dataUrl = "/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
 
 /**
  * get the JSON data to create a cohortData object.
