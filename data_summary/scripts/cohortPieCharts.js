@@ -17,7 +17,9 @@ function setCohortData(url) {
     xhr.open("GET", url, false);
     xhr.onload = function() {
         var status = xhr.status;
-        console.log("xhr status: " + status);
+        if (status != 200) {
+            console.log("xhr error: " + status);
+        }
     };
     xhr.send(null);
     var response = xhr.responseText;
