@@ -31,7 +31,7 @@ function setCohortData(url) {
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
 
-    console.log(JSON.stringify(contents, null, '\t'));
+    // console.log(JSON.stringify(contents, null, '\t'));
 
     var cohort = new cohortData(contents);
 

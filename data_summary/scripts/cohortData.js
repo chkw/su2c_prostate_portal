@@ -122,9 +122,60 @@ function patientData(data) {
     };
 
     /**
+     * Get the treatment details.
+     * ["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"]
+     */
+    this.getTreatmentDetails = function() {
+        if (this.data == null) {
+            this.data = {
+                "attributes" : {
+                    "SU2C Subsequent TX V2" : {
+                        "Treatment Details" : noForm
+                    }
+                }
+            };
+            return noForm;
+        } else if (this.data["attributes"] == null) {
+            this.data["attributes"] = {
+                "SU2C Subsequent TX V2" : {
+                    "Treatment Details" : noForm
+                }
+            };
+            return noForm;
+        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
+            this.data["attributes"]["SU2C Subsequent TX V2"] = {
+                "Treatment Details" : noForm
+            };
+            return noForm;
+        } else {
+            var data = new Array();
+            var entry = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"];
+            if (entry == null) {
+                // form, but no entry
+                this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"] = unknown;
+            } else if ( entry instanceof Array) {
+                // array
+                for (var i in entry) {
+                    var item = entry[i].trim();
+                    if (item != "") {
+                        data.push(item);
+                    }
+                }
+            } else {
+                // not null, not array, probably simple string
+                var item = entry.trim();
+                if (item != "") {
+                    data.push(item);
+                }
+            }
+            // TODO process data
+            return processListOfNames(data, "Treatment Details");
+        }
+    };
+
+    /**
      * Get the subsequent drug.
      * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
-     * ["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"]
      */
     this.getSubsequentDrugs = function() {
         if (this.data == null) {
@@ -150,113 +201,55 @@ function patientData(data) {
             return noForm;
         } else {
             var data = new Array();
-            // TODO get drug name
-            var drugName = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
-            if ( drugName instanceof Array) {
-                for (var i in drugName) {
-                    var drug = drugName[i];
-                    if (drug != "") {
-                        data.push("d" + drug);
+            var entry = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
+            if (entry == null) {
+                // form, but no entry
+                this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
+                return unknown;
+            } else if ( entry instanceof Array) {
+                // array
+                for (var i in entry) {
+                    var item = entry[i].trim();
+                    if (item != "") {
+                        data.push(item);
                     }
                 }
             } else {
-                if ((drugName != null) && (drugName != "")) {
-                    data.push("d" + drugName);
+                // not null, not array, probably simple string
+                var item = entry.trim();
+                if (item != "") {
+                    data.push(item);
+                } else {
+                    this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
+                    return unknown;
                 }
             }
-            // TODO get tx details
-            var txDetails = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"];
-            if ( txDetails instanceof Array) {
-                for (var i in txDetails) {
-                    var tx = txDetails[i];
-                    if (tx != "") {
-                        data.push("t" + tx);
-                    }
-                }
-            } else {
-                if ((txDetails != null) && (txDetails != "")) {
-                    data.push("t" + txDetails);
-                }
-            }
-            // TODO process drugs/Tx details
-            return JSON.stringify(data);
+            // process data
+            return processListOfNames(data, "Drug Name");
         }
     };
 
-    /**
-     * Process the drug list.  Remove trailing 'acetate'.  Skip 'prednisone'.
-     */
-    processDrugList = function(drugString) {
+    processListOfNames = function(namesArray, type) {
         var result = "";
-        var drugs = drugString.split(";");
-        for (var i in drugs) {
-            var drug = drugs[i].trim();
-            drug = drug.replace(/Acetate$/i, '');
-            if (drug.toLowerCase() == "prednisone") {
-                // do nothing, skip it
-            } else {
-                result = result + ";" + drug.trim();
+        var typeL = type.toLowerCase();
+        for (var i in namesArray) {
+            var name = namesArray[i];
+            var processedName = "";
+            if (typeL == "drug name") {
+                processedName = processDrugName(name);
+            } else if (typeL == "treatment details") {
+                processedName = processTreatmentDetails(name);
             }
+            result = result + " and " + processedName.trim();
         }
-        result = result.replace(/^;/, '');
+        result = result.replace(/^ and /, '');
         return result;
     };
 
     /**
-     * Get the subsequent drug.
-     * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
-     * ["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"]
+     * Process the drug name.  Remove trailing 'acetate'.  Skip 'prednisone'.
      */
-    this.getSubsequentDrugs_old = function() {
-        if (this.data == null) {
-            this.data = {
-                "attributes" : {
-                    "SU2C Subsequent TX V2" : {
-                        "Drug Name" : noForm
-                    }
-                }
-            };
-            return noForm;
-        } else if (this.data["attributes"] == null) {
-            this.data["attributes"] = {
-                "SU2C Subsequent TX V2" : {
-                    "Drug Name" : noForm
-                }
-            };
-            return noForm;
-        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
-            this.data["attributes"]["SU2C Subsequent TX V2"] = {
-                "Drug Name" : noForm
-            };
-            return noForm;
-        } else {
-            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
-            if ( val instanceof Array) {
-                // TODO multiple drug treatments separated by "and"
-                val = JSON.stringify(val);
-            } else {
-                val = val.trim();
-            }
-            if (val == null || val == "") {
-                var txDetails = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"].trim();
-                if (txDetails != "") {
-                    this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = txDetails;
-                    val = txDetails;
-                } else {
-                    this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = unknown;
-                    val = unknown;
-                }
-            }
-            val = processDrugList(val);
-            this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"] = val;
-            return val;
-        }
-    };
-
-    /**
-     * Process the drug list.  Remove trailing 'acetate'.  Skip 'prednisone'.
-     */
-    processDrugList_old = function(drugString) {
+    processDrugName = function(drugString) {
         var result = "";
         var drugs = drugString.split(";");
         for (var i in drugs) {
@@ -312,6 +305,8 @@ function cohortData(deserializedCohortJson) {
                 val = this.getPatient(id).getBiopsySite();
             } else if (featureL == 'subsequentdrugs') {
                 val = this.getPatient(id).getSubsequentDrugs();
+            } else if (featureL == 'treatmentdetails') {
+                val = this.getPatient(id).getTreatmentDetails();
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
                 counts[val] = 0;
