@@ -4,6 +4,10 @@
  * Draw pie charts using highcharts (http://www.highcharts.com/).
  */
 
+// TODO use renderer to draw some element to act as a button to promote a chart to the top.
+// http://api.highcharts.com/highcharts#Renderer
+// https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
+
 // var dataUrl = 'data_summary/data/cohort.json';
 //var dataUrl = 'data_summary/data/cohort_dec28.json';
 // on https://su2c-dev.ucsc.edu/
@@ -215,6 +219,9 @@ function redrawCharts() {
     updateChartCrumbs(selectionCriteria);
 }
 
+/**
+ * initial drawing of charts
+ */
 function initializeCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
