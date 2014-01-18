@@ -153,6 +153,7 @@ function patientData(data) {
             if (entry == null) {
                 // form, but no entry
                 this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"] = unknown;
+                return unknown;
             } else if ( entry instanceof Array) {
                 // array
                 for (var i in entry) {
@@ -166,9 +167,12 @@ function patientData(data) {
                 var item = entry.trim();
                 if (item != "") {
                     data.push(item);
+                } else {
+                    this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"] = unknown;
+                    return unknown;
                 }
             }
-            // TODO process data
+            // process data
             return processListOfNames(data, "Treatment Details");
         }
     };
@@ -247,6 +251,20 @@ function patientData(data) {
     };
 
     /**
+     * Process treatment details.
+     */
+    processTreatmentDetails = function(detailsString) {
+        var result = "";
+        var details = detailsString.split(";");
+        for (var i in details) {
+            var detail = details[i];
+            result = result + ";" + detail.trim();
+        }
+        result = result.replace(/^;/, '');
+        return result;
+    };
+
+    /**
      * Process the drug name.  Remove trailing 'acetate'.  Skip 'prednisone'.
      */
     processDrugName = function(drugString) {
@@ -294,10 +312,10 @@ function cohortData(deserializedCohortJson) {
      */
     this.getPatientCounts = function(ids, feature) {
         var featureL = feature.toLowerCase();
+        console.log("featureL->" + JSON.stringify(featureL));
         var counts = new Object();
         for (var i in ids) {
             var id = ids[i];
-            console.log("id->" + id + " " + feature);
             var val = '__NOT_SET__';
             if (featureL == 'studysite') {
                 val = this.getPatient(id).getStudySite();
@@ -307,6 +325,7 @@ function cohortData(deserializedCohortJson) {
                 val = this.getPatient(id).getSubsequentDrugs();
             } else if (featureL == 'treatmentdetails') {
                 val = this.getPatient(id).getTreatmentDetails();
+                console.log("val->" + JSON.stringify(val));
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
                 counts[val] = 0;
@@ -346,7 +365,7 @@ function cohortData(deserializedCohortJson) {
     };
 
     /**
-     * From the specified ID list, select only the patients by the specified parameters.  feature is one of ['studySite', 'biopsySite'].
+     * From the specified ID list, select only the patients by the specified parameters.  feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
      */
     this.selectPatients = function(startingIds, feature, value) {
         var featureL = feature.toLowerCase();
@@ -360,6 +379,8 @@ function cohortData(deserializedCohortJson) {
                 patientVal = this.getPatient(id).getBiopsySite();
             } else if (featureL === 'subsequentdrugs') {
                 patientVal = this.getPatient(id).getSubsequentDrugs();
+            } else if (featureL === 'treatmentdetails') {
+                patientVal = this.getPatient(id).getTreatmentDetails();
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);

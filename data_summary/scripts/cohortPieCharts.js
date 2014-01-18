@@ -204,9 +204,15 @@ function redrawCharts() {
     data = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
     setNewChartData(subsequentDrugsChart, data);
 
+    data = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
+    setNewChartData(treatmentDetailsChart, data);
+
+    console.log("data->" + JSON.stringify(data));
+
     studySiteChart.redraw();
     biopsySiteChart.redraw();
     subsequentDrugsChart.redraw();
+    treatmentDetailsChart.redraw();
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -217,10 +223,14 @@ function initializeCharts() {
     var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
     var subsequentDrugsData = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
+    var treatmentDetailsData = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
+
+    console.log("treamentDeatilsData->" + JSON.stringify(treatmentDetailsData));
 
     var studySiteChartOptions = pieChartOptionsTemplate;
     var biopsySiteChartOptions = pieChartOptionsTemplate;
     var subsequentDrugsChartOptions = pieChartOptionsTemplate;
+    var treatmentDetailsChartOptions = pieChartOptionsTemplate;
 
     setupChartOptions("chart01", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     studySiteChart = new Highcharts.Chart(studySiteChartOptions);
@@ -231,12 +241,16 @@ function initializeCharts() {
     setupChartOptions("chart03", "subsequentDrugs", subsequentDrugsData, "Number of Samples by On-Study Drugs", subsequentDrugsChartOptions);
     subsequentDrugsChart = new Highcharts.Chart(subsequentDrugsChartOptions);
 
+    setupChartOptions("chart04", "treatmentDetails", treatmentDetailsData, "Number of Samples by Treatment Details", treatmentDetailsChartOptions);
+    treatmentDetailsChart = new Highcharts.Chart(treatmentDetailsChartOptions);
+
     updateChartCrumbs(selectionCriteria);
 }
 
 var studySiteChart = null;
 var biopsySiteChart = null;
 var subsequentDrugsChart = null;
+var treatmentDetailsChart = null;
 var selectionCriteria = new selectionCriteria();
 var cohort = null;
 
