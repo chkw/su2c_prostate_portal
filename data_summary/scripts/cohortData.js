@@ -28,7 +28,6 @@ function selectionCriteria() {
         this.criteria.push(criteria);
     };
 
-    // TODO currently removes only first match... better to remove ALL matches
     this.removeCriteria = function(feature, value) {
         for (var i = 0; i < this.criteria.length; i++) {
             if ((this.criteria[i]["feature"] == feature) && (this.criteria[i]["value"] == value)) {
@@ -312,7 +311,8 @@ function cohortData(deserializedCohortJson) {
     };
 
     /**
-     * Get the counts for the specified patient IDs and feature. feature is one of ['studySite', 'biopsySite'].
+     * Get the counts for the specified patient IDs and feature
+     * feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
      */
     this.getPatientCounts = function(ids, feature) {
         var featureL = feature.toLowerCase();
@@ -350,7 +350,8 @@ function cohortData(deserializedCohortJson) {
     };
 
     /*
-     *Select the IDs based on multiple criteria.  selectionCriteria is an Array of objects{feature,value}.
+     *Select the IDs based on multiple criteria.
+     * selectionCriteria is an Array of objects{feature,value}.
      */
     this.selectIds = function(selectionCriteria) {
         var ids = this.getAllPatientIds();
@@ -367,7 +368,8 @@ function cohortData(deserializedCohortJson) {
     };
 
     /**
-     * From the specified ID list, select only the patients by the specified parameters.  feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
+     * From the specified ID list, select only the patients by the specified parameters.
+     * feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
      */
     this.selectPatients = function(startingIds, feature, value) {
         var featureL = feature.toLowerCase();
