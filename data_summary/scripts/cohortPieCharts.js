@@ -207,8 +207,6 @@ function redrawCharts() {
     data = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
     setNewChartData(treatmentDetailsChart, data);
 
-    console.log("data->" + JSON.stringify(data));
-
     studySiteChart.redraw();
     biopsySiteChart.redraw();
     subsequentDrugsChart.redraw();
@@ -224,8 +222,6 @@ function initializeCharts() {
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
     var subsequentDrugsData = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
     var treatmentDetailsData = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
-
-    console.log("treamentDeatilsData->" + JSON.stringify(treatmentDetailsData));
 
     var studySiteChartOptions = pieChartOptionsTemplate;
     var biopsySiteChartOptions = pieChartOptionsTemplate;

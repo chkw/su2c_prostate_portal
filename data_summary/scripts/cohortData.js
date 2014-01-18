@@ -20,6 +20,11 @@ function selectionCriteria() {
             "feature" : feature,
             "value" : value
         };
+        for (var i in this.criteria) {
+            if (JSON.stringify(this.criteria[i]) == JSON.stringify(criteria)) {
+                return;
+            }
+        }
         this.criteria.push(criteria);
     };
 
@@ -27,7 +32,6 @@ function selectionCriteria() {
     this.removeCriteria = function(feature, value) {
         for (var i = 0; i < this.criteria.length; i++) {
             if ((this.criteria[i]["feature"] == feature) && (this.criteria[i]["value"] == value)) {
-                console.log('found element to remove');
                 this.criteria.splice(i, 1);
                 break;
             }
@@ -312,7 +316,6 @@ function cohortData(deserializedCohortJson) {
      */
     this.getPatientCounts = function(ids, feature) {
         var featureL = feature.toLowerCase();
-        console.log("featureL->" + JSON.stringify(featureL));
         var counts = new Object();
         for (var i in ids) {
             var id = ids[i];
@@ -325,7 +328,6 @@ function cohortData(deserializedCohortJson) {
                 val = this.getPatient(id).getSubsequentDrugs();
             } else if (featureL == 'treatmentdetails') {
                 val = this.getPatient(id).getTreatmentDetails();
-                console.log("val->" + JSON.stringify(val));
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
                 counts[val] = 0;
