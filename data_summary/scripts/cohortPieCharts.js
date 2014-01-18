@@ -5,9 +5,10 @@
  */
 
 // var dataUrl = 'data_summary/data/cohort.json';
-var dataUrl = 'data_summary/data/cohort_dec28.json';
+//var dataUrl = 'data_summary/data/cohort_dec28.json';
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = "/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
+var dataUrl = "data_summary/data/cohort_20140117.json";
 
 /**
  * get the JSON data to create a cohortData object.
@@ -29,6 +30,8 @@ function setCohortData(url) {
 
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
+
+    console.log(JSON.stringify(contents, null, '\t'));
 
     var cohort = new cohortData(contents);
 

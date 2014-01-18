@@ -124,6 +124,7 @@ function patientData(data) {
     /**
      * Get the subsequent drug.
      * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
+     * ["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"]
      */
     this.getSubsequentDrugs = function() {
         if (this.data == null) {
@@ -148,7 +149,94 @@ function patientData(data) {
             };
             return noForm;
         } else {
-            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"].trim();
+            var data = new Array();
+            // TODO get drug name
+            var drugName = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
+            if ( drugName instanceof Array) {
+                for (var i in drugName) {
+                    var drug = drugName[i];
+                    if (drug != "") {
+                        data.push("d" + drug);
+                    }
+                }
+            } else {
+                if ((drugName != null) && (drugName != "")) {
+                    data.push("d" + drugName);
+                }
+            }
+            // TODO get tx details
+            var txDetails = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"];
+            if ( txDetails instanceof Array) {
+                for (var i in txDetails) {
+                    var tx = txDetails[i];
+                    if (tx != "") {
+                        data.push("t" + tx);
+                    }
+                }
+            } else {
+                if ((txDetails != null) && (txDetails != "")) {
+                    data.push("t" + txDetails);
+                }
+            }
+            // TODO process drugs/Tx details
+            return JSON.stringify(data);
+        }
+    };
+
+    /**
+     * Process the drug list.  Remove trailing 'acetate'.  Skip 'prednisone'.
+     */
+    processDrugList = function(drugString) {
+        var result = "";
+        var drugs = drugString.split(";");
+        for (var i in drugs) {
+            var drug = drugs[i].trim();
+            drug = drug.replace(/Acetate$/i, '');
+            if (drug.toLowerCase() == "prednisone") {
+                // do nothing, skip it
+            } else {
+                result = result + ";" + drug.trim();
+            }
+        }
+        result = result.replace(/^;/, '');
+        return result;
+    };
+
+    /**
+     * Get the subsequent drug.
+     * ["attributes"]["SU2C Subsequent TX V2"]["Drug Name"]
+     * ["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"]
+     */
+    this.getSubsequentDrugs_old = function() {
+        if (this.data == null) {
+            this.data = {
+                "attributes" : {
+                    "SU2C Subsequent TX V2" : {
+                        "Drug Name" : noForm
+                    }
+                }
+            };
+            return noForm;
+        } else if (this.data["attributes"] == null) {
+            this.data["attributes"] = {
+                "SU2C Subsequent TX V2" : {
+                    "Drug Name" : noForm
+                }
+            };
+            return noForm;
+        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
+            this.data["attributes"]["SU2C Subsequent TX V2"] = {
+                "Drug Name" : noForm
+            };
+            return noForm;
+        } else {
+            var val = this.data["attributes"]["SU2C Subsequent TX V2"]["Drug Name"];
+            if ( val instanceof Array) {
+                // TODO multiple drug treatments separated by "and"
+                val = JSON.stringify(val);
+            } else {
+                val = val.trim();
+            }
             if (val == null || val == "") {
                 var txDetails = this.data["attributes"]["SU2C Subsequent TX V2"]["Treatment Details"].trim();
                 if (txDetails != "") {
@@ -168,7 +256,7 @@ function patientData(data) {
     /**
      * Process the drug list.  Remove trailing 'acetate'.  Skip 'prednisone'.
      */
-    processDrugList = function(drugString) {
+    processDrugList_old = function(drugString) {
         var result = "";
         var drugs = drugString.split(";");
         for (var i in drugs) {
@@ -212,16 +300,17 @@ function cohortData(deserializedCohortJson) {
      * Get the counts for the specified patient IDs and feature. feature is one of ['studySite', 'biopsySite'].
      */
     this.getPatientCounts = function(ids, feature) {
+        var featureL = feature.toLowerCase();
         var counts = new Object();
         for (var i in ids) {
             var id = ids[i];
+            console.log("id->" + id + " " + feature);
             var val = '__NOT_SET__';
-            feature = feature.toLowerCase();
-            if (feature == 'studysite') {
+            if (featureL == 'studysite') {
                 val = this.getPatient(id).getStudySite();
-            } else if (feature == 'biopsysite') {
+            } else if (featureL == 'biopsysite') {
                 val = this.getPatient(id).getBiopsySite();
-            } else if (feature == 'subsequentdrugs') {
+            } else if (featureL == 'subsequentdrugs') {
                 val = this.getPatient(id).getSubsequentDrugs();
             }
             if ((val != '__NOT_SET__') && !( val in counts)) {
@@ -265,16 +354,16 @@ function cohortData(deserializedCohortJson) {
      * From the specified ID list, select only the patients by the specified parameters.  feature is one of ['studySite', 'biopsySite'].
      */
     this.selectPatients = function(startingIds, feature, value) {
+        var featureL = feature.toLowerCase();
         var keptIds = new Array();
         for (var i in startingIds) {
             var id = startingIds[i];
             var patientVal = '__NOT_SET__';
-            feature = feature.toLowerCase();
-            if (feature === 'studysite') {
+            if (featureL === 'studysite') {
                 patientVal = this.getPatient(id).getStudySite();
-            } else if (feature === 'biopsysite') {
+            } else if (featureL === 'biopsysite') {
                 patientVal = this.getPatient(id).getBiopsySite();
-            } else if (feature === 'subsequentdrugs') {
+            } else if (featureL === 'subsequentdrugs') {
                 patientVal = this.getPatient(id).getSubsequentDrugs();
             }
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
@@ -290,6 +379,9 @@ function cohortData(deserializedCohortJson) {
     this.getAllPatientIds = function() {
         var ids = new Array();
         for (var id in this.cohort) {
+            if (id == "Biopsy") {
+                continue;
+            }
             ids.push(id);
         }
         return ids;
