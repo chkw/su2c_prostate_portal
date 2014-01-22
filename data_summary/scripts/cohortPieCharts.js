@@ -12,7 +12,7 @@
 //var dataUrl = 'data_summary/data/cohort_dec28.json';
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = "/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
-var dataUrl = "data_summary/data/cohort_20140117.json";
+var dataUrl = "data_summary/data/cohort_20140121.json";
 
 /**
  * get the JSON data to create a cohortData object.
@@ -52,6 +52,18 @@ Highcharts.setOptions({
         // plotBackgroundColor : 'rgba(255, 255, 255, .9)',
         // plotShadow : true,
         // plotBorderWidth : 1
+        events : {
+            load : function() {
+                var r = this.renderer;
+                r.rect(10, 10, 16, 16, 3).attr({
+                    "stroke-width" : 2,
+                    "stroke" : 'red',
+                    "fill" : 'yellow'
+                }).on("click", function() {
+                    console.log("clicked the square in: " + this.parentNode.parentNode.parentNode.id);
+                }).add();
+            }
+        }
     }
 });
 
@@ -105,7 +117,7 @@ var pieChartOptionsTemplate = {
         name : null,
         data : null,
         showInLegend : true
-    }]
+    }],
 };
 
 /**
