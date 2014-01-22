@@ -52,6 +52,18 @@ Highcharts.setOptions({
         // plotBackgroundColor : 'rgba(255, 255, 255, .9)',
         // plotShadow : true,
         // plotBorderWidth : 1
+        events : {
+            load : function() {
+                var r = this.renderer;
+                r.rect(10, 10, 16, 16, 3).attr({
+                    "stroke-width" : 2,
+                    "stroke" : 'red',
+                    "fill" : 'yellow'
+                }).on("click", function() {
+                    console.log("clicked the square in: " + this.parentNode.parentNode.parentNode.id);
+                }).add();
+            }
+        }
     }
 });
 
