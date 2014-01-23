@@ -41,8 +41,12 @@ article.last {
     /*color: blue;*/
     background-color: lightgray;
 }
+.pieChartContainer {
+    width: 33%;
+    float: left;
+}
 .pieChart {
-    height: 300px
+    height: 350px
 }
 #chartCrumbs {
     vertical-align: bottom

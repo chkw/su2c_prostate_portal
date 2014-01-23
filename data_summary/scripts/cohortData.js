@@ -261,6 +261,7 @@ function patientData(data) {
         var details = detailsString.split(";");
         for (var i in details) {
             var detail = details[i];
+            detail = detail.replace(/ alone, /, ', ');
             result = result + ";" + detail.trim();
         }
         result = result.replace(/^;/, '');

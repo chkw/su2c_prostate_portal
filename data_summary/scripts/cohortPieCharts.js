@@ -55,8 +55,7 @@ Highcharts.setOptions({
             // http://api.highcharts.com/highcharts#Renderer
             // https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
             load : function() {
-                var r = this.renderer;
-                r.text("move to top", 3, 11).attr({
+                this.renderer.text("move to top", 3, 11).attr({
                     "cursor" : "pointer"
                 }).on("click", function() {
                     var chartDivElement = this.parentNode.parentNode.parentNode;
@@ -79,7 +78,7 @@ var plotOptions = {
         allowPointSelect : true,
         cursor : 'pointer',
         dataLabels : {
-            enabled : true,
+            enabled : false,
             color : 'black',
             connectorColor : 'gray',
             format : '<b>{point.name}</b>: {point.y}'
@@ -102,8 +101,17 @@ var tooltipOptions = {
     pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
 };
 
+var legendOptions = {
+    "enabled" : true,
+    "floating" : false,
+    "itemWidth" : null,
+    "layout" : "horizontal",
+    "align" : "center"
+};
+
 var pieChartOptionsTemplate = {
     chart : chartOptions,
+    legend : legendOptions,
     title : {
         text : ''
     },
