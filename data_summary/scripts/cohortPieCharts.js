@@ -205,6 +205,9 @@ function swapContainingDivs(nodeA, nodeB) {
     $("#" + nodeB.id).appendTo(parentA);
 }
 
+/**
+ * Move a chart to the top.  Assumes the chart is in a container div.
+ */
 function moveChartUp(promotedChartDiv) {
     var nodeList = document.getElementsByClassName("pieChart");
     var bubble = null;
