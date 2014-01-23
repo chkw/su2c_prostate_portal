@@ -4,14 +4,11 @@
  * Draw pie charts using highcharts (http://www.highcharts.com/).
  */
 
-// TODO use renderer to draw some element to act as a button to promote a chart to the top.
-// http://api.highcharts.com/highcharts#Renderer
-// https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
-
 // var dataUrl = 'data_summary/data/cohort.json';
 //var dataUrl = 'data_summary/data/cohort_dec28.json';
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = "/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
+//var dataUrl = ""/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json"";
 var dataUrl = "data_summary/data/cohort_20140121.json";
 
 /**
@@ -53,6 +50,10 @@ Highcharts.setOptions({
         // plotShadow : true,
         // plotBorderWidth : 1
         events : {
+
+            // use renderer to draw some element to act as a button to promote a chart to the top.
+            // http://api.highcharts.com/highcharts#Renderer
+            // https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
             load : function() {
                 var r = this.renderer;
                 r.rect(10, 10, 16, 16, 3).attr({
@@ -60,7 +61,8 @@ Highcharts.setOptions({
                     "stroke" : 'red',
                     "fill" : 'yellow'
                 }).on("click", function() {
-                    console.log("clicked the square in: " + this.parentNode.parentNode.parentNode.id);
+                    var chartDivElement = this.parentNode.parentNode.parentNode;
+                    moveChartUp(chartDivElement);
                 }).add();
             }
         }
@@ -193,6 +195,36 @@ function updateChartCrumbs(selectionCriteria) {
         var value = criteria[i]["value"];
         createCrumbButton(feature, value).appendTo(e);
     }
+    // TODO add test button
+    var testButtonElement = $("<button class='testButton'>testButton</button>").click(function() {
+        reorderCharts(null);
+    });
+    testButtonElement.appendTo(e);
+}
+
+/**
+ * Assumes the parents are divs.
+ */
+function swapContainingDivs(nodeA, nodeB) {
+    var parentA = nodeA.parentNode;
+    var parentB = nodeB.parentNode;
+    $("#" + nodeA.id).appendTo(parentB);
+    $("#" + nodeB.id).appendTo(parentA);
+}
+
+function moveChartUp(promotedChartDiv) {
+    var nodeList = document.getElementsByClassName("pieChart");
+    var bubble = null;
+    for (var i = nodeList.length - 1; i >= 0; --i) {
+        var node = nodeList[i];
+        if (node.parentNode.id == promotedChartDiv.parentNode.id) {
+            bubble = node;
+            continue;
+        }
+        if (bubble != null) {
+            swapContainingDivs(bubble, node);
+        }
+    }
 }
 
 /**
@@ -247,16 +279,16 @@ function initializeCharts() {
     var subsequentDrugsChartOptions = pieChartOptionsTemplate;
     var treatmentDetailsChartOptions = pieChartOptionsTemplate;
 
-    setupChartOptions("chart01", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
+    setupChartOptions("chart1", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     studySiteChart = new Highcharts.Chart(studySiteChartOptions);
 
-    setupChartOptions("chart02", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
+    setupChartOptions("chart2", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
     biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
 
-    setupChartOptions("chart03", "subsequentDrugs", subsequentDrugsData, "Number of Samples by On-Study Drugs", subsequentDrugsChartOptions);
+    setupChartOptions("chart3", "subsequentDrugs", subsequentDrugsData, "Number of Samples by On-Study Drugs", subsequentDrugsChartOptions);
     subsequentDrugsChart = new Highcharts.Chart(subsequentDrugsChartOptions);
 
-    setupChartOptions("chart04", "treatmentDetails", treatmentDetailsData, "Number of Samples by Treatment Details", treatmentDetailsChartOptions);
+    setupChartOptions("chart4", "treatmentDetails", treatmentDetailsData, "Number of Samples by Treatment Details", treatmentDetailsChartOptions);
     treatmentDetailsChart = new Highcharts.Chart(treatmentDetailsChartOptions);
 
     updateChartCrumbs(selectionCriteria);
