@@ -56,7 +56,7 @@ Highcharts.setOptions({
             // https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
             load : function() {
                 var r = this.renderer;
-                r.text("move to top", 10, 15).attr({
+                r.text("move to top", 3, 11).attr({
                     "cursor" : "pointer"
                 }).on("click", function() {
                     var chartDivElement = this.parentNode.parentNode.parentNode;
