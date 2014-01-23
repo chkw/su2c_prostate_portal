@@ -56,10 +56,8 @@ Highcharts.setOptions({
             // https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
             load : function() {
                 var r = this.renderer;
-                r.rect(10, 10, 16, 16, 3).attr({
-                    "stroke-width" : 2,
-                    "stroke" : 'red',
-                    "fill" : 'yellow'
+                r.text("move to top", 10, 15).attr({
+                    "cursor" : "pointer"
                 }).on("click", function() {
                     var chartDivElement = this.parentNode.parentNode.parentNode;
                     moveChartUp(chartDivElement);
@@ -195,11 +193,6 @@ function updateChartCrumbs(selectionCriteria) {
         var value = criteria[i]["value"];
         createCrumbButton(feature, value).appendTo(e);
     }
-    // TODO add test button
-    var testButtonElement = $("<button class='testButton'>testButton</button>").click(function() {
-        reorderCharts(null);
-    });
-    testButtonElement.appendTo(e);
 }
 
 /**
