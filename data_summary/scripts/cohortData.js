@@ -262,6 +262,7 @@ function patientData(data) {
         for (var i in details) {
             var detail = details[i];
             detail = detail.replace(/ alone, /, ', ');
+            detail = detail.replace(/ cycles of /, ' cycles ');
             result = result + ";" + detail.trim();
         }
         result = result.replace(/^;/, '');
