@@ -51,6 +51,33 @@ function patientData(data) {
 
     var noForm = "not assessed";
     var unknown = "unknown";
+    var notAvailable = "not available";
+
+    /**
+     * Check if patient has this datatype.
+     * datatypes:["datatype1","datatype2","datatype3"]
+     */
+    this.getDatatype = function(datatype) {
+        var datatypeL = datatype.trim().toLowerCase();
+        var result = notAvailable;
+        if (this.data == null) {
+            // do nothing
+            return result;
+        } else if (this.data["datatypes"] == null) {
+            return result;
+        }
+
+        // search for datatype
+        for (var i in this.data["datatypes"]) {
+            var typeL = this.data["datatype"][i].trim().toLowerCase();
+            if (datatypeL == typeL) {
+                result = datatype;
+                break;
+            }
+        }
+
+        return result;
+    };
 
     /**
      * Get the study site.
@@ -313,24 +340,40 @@ function cohortData(deserializedCohortJson) {
     };
 
     /**
+     * Get the patient's value for the specified feature.
+     */
+    this.getPatientVal = function(id, feature) {
+        var featureL = feature.toLowerCase();
+        var patientVal = '__NOT_SET__';
+        if (featureL === 'studysite') {
+            patientVal = this.getPatient(id).getStudySite();
+        } else if (featureL === 'biopsysite') {
+            patientVal = this.getPatient(id).getBiopsySite();
+        } else if (featureL === 'subsequentdrugs') {
+            patientVal = this.getPatient(id).getSubsequentDrugs();
+        } else if (featureL === 'treatmentdetails') {
+            patientVal = this.getPatient(id).getTreatmentDetails();
+        } else if (featureL == 'ctc') {
+            patientVal = this.getPatient(id).getDatatype("CTC");
+        } else if (featureL == 'acgh') {
+            patientVal = this.getPatient(id).getDatatype("aCGH");
+        } else if (featureL == 'rnaseq') {
+            patientVal = this.getPatient(id).getDatatype("RNAseq");
+        } else if (featureL == 'fish') {
+            patientVal = this.getPatient(id).getDatatype("FISH");
+        }
+        return patientVal;
+    };
+
+    /**
      * Get the counts for the specified patient IDs and feature
      * feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
      */
     this.getPatientCounts = function(ids, feature) {
-        var featureL = feature.toLowerCase();
         var counts = new Object();
         for (var i in ids) {
             var id = ids[i];
-            var val = '__NOT_SET__';
-            if (featureL == 'studysite') {
-                val = this.getPatient(id).getStudySite();
-            } else if (featureL == 'biopsysite') {
-                val = this.getPatient(id).getBiopsySite();
-            } else if (featureL == 'subsequentdrugs') {
-                val = this.getPatient(id).getSubsequentDrugs();
-            } else if (featureL == 'treatmentdetails') {
-                val = this.getPatient(id).getTreatmentDetails();
-            }
+            var val = this.getPatientVal(id, feature);
             if ((val != '__NOT_SET__') && !( val in counts)) {
                 counts[val] = 0;
             }
@@ -374,20 +417,10 @@ function cohortData(deserializedCohortJson) {
      * feature is one of ['studySite', 'biopsySite', 'subsequentdrugs', 'treatmentdetails'].
      */
     this.selectPatients = function(startingIds, feature, value) {
-        var featureL = feature.toLowerCase();
         var keptIds = new Array();
         for (var i in startingIds) {
             var id = startingIds[i];
-            var patientVal = '__NOT_SET__';
-            if (featureL === 'studysite') {
-                patientVal = this.getPatient(id).getStudySite();
-            } else if (featureL === 'biopsysite') {
-                patientVal = this.getPatient(id).getBiopsySite();
-            } else if (featureL === 'subsequentdrugs') {
-                patientVal = this.getPatient(id).getSubsequentDrugs();
-            } else if (featureL === 'treatmentdetails') {
-                patientVal = this.getPatient(id).getTreatmentDetails();
-            }
+            var patientVal = this.getPatientVal(id, feature);
             if ((patientVal != '__NOT_SET__') && (patientVal == value)) {
                 keptIds.push(id);
             }
