@@ -4,12 +4,19 @@
  * Draw pie charts using highcharts (http://www.highcharts.com/).
  */
 
-// var dataUrl = 'data_summary/data/cohort.json';
-//var dataUrl = 'data_summary/data/cohort_dec28.json';
 // on https://su2c-dev.ucsc.edu/
-//var dataUrl = "/api/medbook/book/assetsBook/Book%3AProstate%20Cancer/Cohorts/WCDT%20Biopsies%3AJan%202014/Clinical/cohort_dec28.json";
 //var dataUrl = ""/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json"";
 var dataUrl = "data_summary/data/cohort_20140121.json";
+var debug = false;
+
+/**
+ * Log message to console.
+ */
+function logConsole(message) {
+    if (debug) {
+        console.log(message);
+    }
+}
 
 /**
  * get the JSON data to create a cohortData object.
@@ -21,7 +28,7 @@ function setCohortData(url) {
     xhr.onload = function() {
         var status = xhr.status;
         if (status != 200) {
-            console.log("xhr error: " + status);
+            logConsole("xhr error: " + status);
         }
     };
     xhr.send(null);
@@ -32,7 +39,7 @@ function setCohortData(url) {
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
 
-    // console.log(JSON.stringify(contents, null, '\t'));
+    logConsole(JSON.stringify(contents, null, '\t'));
 
     var cohort = new cohortData(contents);
 
@@ -78,10 +85,12 @@ var plotOptions = {
         allowPointSelect : true,
         cursor : 'pointer',
         dataLabels : {
-            enabled : false,
+            enabled : true,
             color : 'black',
             connectorColor : 'gray',
-            format : '<b>{point.name}</b>: {point.y}'
+            distance : 5,
+            // format : '<b>{point.name}</b>: {point.y}',
+            format : '{point.y}'
         },
         point : {
             events : {
@@ -242,27 +251,27 @@ function setNewChartData(chartObject, chartData) {
 }
 
 /**
+ * Set the new chart data and redraw.
+ */
+function redrawNewData(chart, data) {
+    setNewChartData(chart, data);
+    chart.redraw();
+}
+
+/**
  * Redraw pie charts using the current selectionCriteria object.
  */
 function redrawCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    var data = cohort.getPatientCounts(selectedIds, 'studySite');
-    setNewChartData(studySiteChart, data);
-
-    data = cohort.getPatientCounts(selectedIds, 'biopsySite');
-    setNewChartData(biopsySiteChart, data);
-
-    data = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
-    setNewChartData(subsequentDrugsChart, data);
-
-    data = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
-    setNewChartData(treatmentDetailsChart, data);
-
-    studySiteChart.redraw();
-    biopsySiteChart.redraw();
-    subsequentDrugsChart.redraw();
-    treatmentDetailsChart.redraw();
+    redrawNewData(studySiteChart, cohort.getPatientCounts(selectedIds, 'studysite'));
+    redrawNewData(biopsySiteChart, cohort.getPatientCounts(selectedIds, 'biopsysite'));
+    redrawNewData(subsequentDrugsChart, cohort.getPatientCounts(selectedIds, 'subsequentdrugs'));
+    redrawNewData(treatmentDetailsChart, cohort.getPatientCounts(selectedIds, 'treatmentdetails'));
+    redrawNewData(ctcChart, cohort.getPatientCounts(selectedIds, 'ctc'));
+    redrawNewData(acghChart, cohort.getPatientCounts(selectedIds, 'acgh'));
+    redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
+    redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'fish'));
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -277,11 +286,19 @@ function initializeCharts() {
     var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
     var subsequentDrugsData = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
     var treatmentDetailsData = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
+    var ctcData = cohort.getPatientCounts(selectedIds, 'ctc');
+    var acghData = cohort.getPatientCounts(selectedIds, 'acgh');
+    var rnaseqData = cohort.getPatientCounts(selectedIds, 'rnaseq');
+    var fishData = cohort.getPatientCounts(selectedIds, 'fish');
 
     var studySiteChartOptions = pieChartOptionsTemplate;
     var biopsySiteChartOptions = pieChartOptionsTemplate;
     var subsequentDrugsChartOptions = pieChartOptionsTemplate;
     var treatmentDetailsChartOptions = pieChartOptionsTemplate;
+    var ctcChartOptions = pieChartOptionsTemplate;
+    var acghChartOptions = pieChartOptionsTemplate;
+    var rnaseqChartOptions = pieChartOptionsTemplate;
+    var fishChartOptions = pieChartOptionsTemplate;
 
     setupChartOptions("chart1", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
     studySiteChart = new Highcharts.Chart(studySiteChartOptions);
@@ -295,6 +312,18 @@ function initializeCharts() {
     setupChartOptions("chart4", "treatmentDetails", treatmentDetailsData, "Number of Samples by Treatment Details", treatmentDetailsChartOptions);
     treatmentDetailsChart = new Highcharts.Chart(treatmentDetailsChartOptions);
 
+    setupChartOptions("chart5", "CTC", ctcData, "Number of Samples by CTC Data", ctcChartOptions);
+    ctcChart = new Highcharts.Chart(ctcChartOptions);
+
+    setupChartOptions("chart6", "aCGH", acghData, "Number of Samples by aCGH Data", acghChartOptions);
+    acghChart = new Highcharts.Chart(acghChartOptions);
+
+    setupChartOptions("chart7", "RNAseq", rnaseqData, "Number of Samples by RNAseq Data", rnaseqChartOptions);
+    rnaseqChart = new Highcharts.Chart(rnaseqChartOptions);
+
+    setupChartOptions("chart8", "FISH", fishData, "Number of Samples by FISH Data", fishChartOptions);
+    fishChart = new Highcharts.Chart(fishChartOptions);
+
     updateChartCrumbs(selectionCriteria);
 }
 
@@ -302,6 +331,11 @@ var studySiteChart = null;
 var biopsySiteChart = null;
 var subsequentDrugsChart = null;
 var treatmentDetailsChart = null;
+var ctcChart = null;
+var acghChart = null;
+var rnaseqChart = null;
+var fishChart = null;
+
 var selectionCriteria = new selectionCriteria();
 var cohort = null;
 
