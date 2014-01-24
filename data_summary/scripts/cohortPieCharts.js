@@ -277,52 +277,32 @@ function redrawCharts() {
 }
 
 /**
+ * Create a pie chart with the specified parameters.
+ */
+function initializeChart(containingDivId, title, dataFeature, selectedIds) {
+    var data = cohort.getPatientCounts(selectedIds, dataFeature);
+    var chartOptions = pieChartOptionsTemplate;
+
+    setupChartOptions(containingDivId, dataFeature, data, title, chartOptions);
+    return new Highcharts.Chart(chartOptions);
+}
+
+/**
  * initial drawing of charts
  */
 function initializeCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    var studySiteData = cohort.getPatientCounts(selectedIds, 'studySite');
-    var biopsySiteData = cohort.getPatientCounts(selectedIds, 'biopsySite');
-    var subsequentDrugsData = cohort.getPatientCounts(selectedIds, 'subsequentDrugs');
-    var treatmentDetailsData = cohort.getPatientCounts(selectedIds, 'treatmentDetails');
-    var ctcData = cohort.getPatientCounts(selectedIds, 'ctc');
-    var acghData = cohort.getPatientCounts(selectedIds, 'acgh');
-    var rnaseqData = cohort.getPatientCounts(selectedIds, 'rnaseq');
-    var fishData = cohort.getPatientCounts(selectedIds, 'fish');
+    studySiteChart = initializeChart("chart1", "Number of Samples by Study Site", 'studySite', selectedIds);
+    biopsySiteChart = initializeChart("chart2", "Number of Samples by Biopsy Site", 'biopsySite', selectedIds);
+    subsequentDrugsChart = initializeChart("chart3", "Number of Samples by On-Study Drugs", 'subsequentDrugs', selectedIds);
 
-    var studySiteChartOptions = pieChartOptionsTemplate;
-    var biopsySiteChartOptions = pieChartOptionsTemplate;
-    var subsequentDrugsChartOptions = pieChartOptionsTemplate;
-    var treatmentDetailsChartOptions = pieChartOptionsTemplate;
-    var ctcChartOptions = pieChartOptionsTemplate;
-    var acghChartOptions = pieChartOptionsTemplate;
-    var rnaseqChartOptions = pieChartOptionsTemplate;
-    var fishChartOptions = pieChartOptionsTemplate;
+    treatmentDetailsChart = initializeChart("chart4", "Number of Samples by Treatment Details", 'treatmentDetails', selectedIds);
+    ctcChart = initializeChart("chart5", "Number of Samples by CTC Data", 'ctc', selectedIds);
+    acghChart = initializeChart("chart6", "Number of Samples by aCGH Data", 'acgh', selectedIds);
 
-    setupChartOptions("chart1", "studySite", studySiteData, "Number of Samples by Study Site", studySiteChartOptions);
-    studySiteChart = new Highcharts.Chart(studySiteChartOptions);
-
-    setupChartOptions("chart2", "biopsySite", biopsySiteData, "Number of Samples by Biopsy Site", biopsySiteChartOptions);
-    biopsySiteChart = new Highcharts.Chart(biopsySiteChartOptions);
-
-    setupChartOptions("chart3", "subsequentDrugs", subsequentDrugsData, "Number of Samples by On-Study Drugs", subsequentDrugsChartOptions);
-    subsequentDrugsChart = new Highcharts.Chart(subsequentDrugsChartOptions);
-
-    setupChartOptions("chart4", "treatmentDetails", treatmentDetailsData, "Number of Samples by Treatment Details", treatmentDetailsChartOptions);
-    treatmentDetailsChart = new Highcharts.Chart(treatmentDetailsChartOptions);
-
-    setupChartOptions("chart5", "CTC", ctcData, "Number of Samples by CTC Data", ctcChartOptions);
-    ctcChart = new Highcharts.Chart(ctcChartOptions);
-
-    setupChartOptions("chart6", "aCGH", acghData, "Number of Samples by aCGH Data", acghChartOptions);
-    acghChart = new Highcharts.Chart(acghChartOptions);
-
-    setupChartOptions("chart7", "RNAseq", rnaseqData, "Number of Samples by RNAseq Data", rnaseqChartOptions);
-    rnaseqChart = new Highcharts.Chart(rnaseqChartOptions);
-
-    setupChartOptions("chart8", "FISH", fishData, "Number of Samples by FISH Data", fishChartOptions);
-    fishChart = new Highcharts.Chart(fishChartOptions);
+    rnaseqChart = initializeChart("chart7", "Number of Samples by RNAseq Data", 'rnaseq', selectedIds);
+    fishChart = initializeChart("chart8", "Number of Samples by FISH Data", 'fish', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
 }
