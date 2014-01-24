@@ -75,7 +75,6 @@ function patientData(data) {
                 break;
             }
         }
-
         return result;
     };
 
@@ -84,6 +83,7 @@ function patientData(data) {
      * ["attributes"]["Demographics"]["Study Site"]
      */
     this.getStudySite = function() {
+        var result = noForm;
         if (this.data == null) {
             this.data = {
                 "attributes" : {
@@ -92,27 +92,28 @@ function patientData(data) {
                     }
                 }
             };
-            return noForm;
+            result = noForm;
         } else if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "demographics" : {
                     "Study Site" : noForm
                 }
             };
-            return noForm;
+            result = noForm;
         } else if (this.data["attributes"]["Demographics"] == null) {
             this.data["attributes"]["Demographics"] = {
                 "Study Site" : noForm
             };
-            return noForm;
+            result = noForm;
         } else {
             var val = this.data["attributes"]["Demographics"]["Study Site"].trim();
             if (val == null) {
                 this.data["attributes"]["Demographics"]["Study Site"] = unknown;
                 val == unknown;
             }
-            return val;
+            result = val;
         }
+        return result;
     };
 
     /**
@@ -120,6 +121,7 @@ function patientData(data) {
      * ["attributes"]["SU2C Biopsy V2"]["Site"]
      */
     this.getBiopsySite = function() {
+        var result = noForm;
         if (this.data == null) {
             this.data = {
                 "attributes" : {
@@ -128,27 +130,28 @@ function patientData(data) {
                     }
                 }
             };
-            return noForm;
+            result = noForm;
         } else if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "SU2C Biopsy V2" : {
                     "Site" : noForm
                 }
             };
-            return noForm;
+            result = noForm;
         } else if (this.data["attributes"]["SU2C Biopsy V2"] == null) {
             this.data["attributes"]["SU2C Biopsy V2"] = {
                 "Site" : noForm
             };
-            return noForm;
+            result = noForm;
         } else {
             var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"].trim();
             if (val == null) {
                 this.data["attributes"]["SU2C Biopsy V2"]["Site"] = unknown;
                 val = unknown;
             }
-            return val;
+            result = val;
         }
+        return result;
     };
 
     /**
@@ -165,14 +168,16 @@ function patientData(data) {
                 }
             };
             return noForm;
-        } else if (this.data["attributes"] == null) {
+        }
+        if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "SU2C Subsequent TX V2" : {
                     "Treatment Details" : noForm
                 }
             };
             return noForm;
-        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
+        }
+        if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
             this.data["attributes"]["SU2C Subsequent TX V2"] = {
                 "Treatment Details" : noForm
             };
@@ -221,14 +226,16 @@ function patientData(data) {
                 }
             };
             return noForm;
-        } else if (this.data["attributes"] == null) {
+        }
+        if (this.data["attributes"] == null) {
             this.data["attributes"] = {
                 "SU2C Subsequent TX V2" : {
                     "Drug Name" : noForm
                 }
             };
             return noForm;
-        } else if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
+        }
+        if (this.data["attributes"]["SU2C Subsequent TX V2"] == null) {
             this.data["attributes"]["SU2C Subsequent TX V2"] = {
                 "Drug Name" : noForm
             };
