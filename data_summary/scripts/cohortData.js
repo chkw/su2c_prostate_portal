@@ -51,7 +51,7 @@ function patientData(data) {
 
     var noForm = "not assessed";
     var unknown = "unknown";
-    var notAvailable = "not available";
+    var noData = "no data";
 
     /**
      * Check if patient has this datatype.
@@ -59,7 +59,7 @@ function patientData(data) {
      */
     this.getDatatype = function(datatype) {
         var datatypeL = datatype.trim().toLowerCase();
-        var result = notAvailable;
+        var result = noData;
         if (this.data == null) {
             // do nothing
             return result;
