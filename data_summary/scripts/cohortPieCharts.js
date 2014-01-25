@@ -7,6 +7,8 @@
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = ""/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json"";
 var dataUrl = "data_summary/data/cohort_20140121.json";
+var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
+
 var debug = false;
 
 /**
@@ -18,10 +20,10 @@ function logConsole(message) {
     }
 }
 
-/**
- * get the JSON data to create a cohortData object.
+/*
+ * Synchronous GET
  */
-function setCohortData(url) {
+function getResponse(url) {
     var xhr = null;
     xhr = new XMLHttpRequest();
     xhr.open("GET", url, false);
@@ -33,6 +35,15 @@ function setCohortData(url) {
     };
     xhr.send(null);
     var response = xhr.responseText;
+
+    return response;
+}
+
+/**
+ * get the JSON data to create a cohortData object.
+ */
+function setCohortData(url) {
+    var response = getResponse(url);
 
     var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
 
