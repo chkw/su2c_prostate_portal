@@ -5,7 +5,7 @@
  */
 
 // on https://su2c-dev.ucsc.edu/
-//var dataUrl = ""/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json"";
+//var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
 var dataUrl = "data_summary/data/cohort_20140121.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
 
