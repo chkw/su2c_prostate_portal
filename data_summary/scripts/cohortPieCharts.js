@@ -9,17 +9,6 @@
 var dataUrl = "data_summary/data/cohort_20140121.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
 
-var debug = false;
-
-/**
- * Log message to console.
- */
-function logConsole(message) {
-    if (debug) {
-        console.log(message);
-    }
-}
-
 /*
  * Synchronous GET
  */
@@ -50,9 +39,19 @@ function setCohortData(url) {
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
 
-    logConsole(JSON.stringify(contents, null, '\t'));
+    // console.log(JSON.stringify(contents, null, '\t'));
 
     var cohort = new cohortData(contents);
+
+    var ids = cohort.getAllPatientIds();
+    var datatypeData = getDatatypeData(datatypeUrl);
+    for (var i in ids) {
+        var id = ids[i];
+        if ( id in datatypeData) {
+            var patient = cohort.getPatient(id);
+            patient["data"]["datatypes"] = datatypeData[id]["datatypes"];
+        }
+    }
 
     return cohort;
 }
@@ -282,7 +281,7 @@ function redrawCharts() {
     redrawNewData(ctcChart, cohort.getPatientCounts(selectedIds, 'ctc'));
     redrawNewData(acghChart, cohort.getPatientCounts(selectedIds, 'acgh'));
     redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
-    redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'fish'));
+    redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'ar_fish'));
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -313,7 +312,7 @@ function initializeCharts() {
     acghChart = initializeChart("chart6", "Number of Samples by aCGH Data", 'acgh', selectedIds);
 
     rnaseqChart = initializeChart("chart7", "Number of Samples by RNAseq Data", 'rnaseq', selectedIds);
-    fishChart = initializeChart("chart8", "Number of Samples by FISH Data", 'fish', selectedIds);
+    fishChart = initializeChart("chart8", "Number of Samples by FISH Data", 'ar_fish', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -329,6 +328,28 @@ var fishChart = null;
 
 var selectionCriteria = new selectionCriteria();
 var cohort = null;
+
+function getDatatypeData(url) {
+    var response = getResponse(datatypeUrl);
+    var datatypeData = d3.tsv.parse(response);
+    var datatypesObj = new Object();
+    for (var i in datatypeData) {
+        var row = datatypeData[i];
+        var id = row[""];
+        var datatypes = new Array();
+        for (var feature in row) {
+            var value = row[feature];
+            if (feature.trim() != "" && value != null && value.trim() != "") {
+                datatypes.push(feature.trim());
+            }
+        }
+        if (datatypes.length >= 1) {
+            datatypesObj[id] = new Object();
+            datatypesObj[id]["datatypes"] = datatypes;
+        }
+    }
+    return datatypesObj;
+}
 
 // TODO onload
 window.onload = function() {
