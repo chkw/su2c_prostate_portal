@@ -3,6 +3,14 @@
 html {
     font-family: Verdana;
 }
+
+table {
+    font-size: smaller;
+    font-weight: normal;
+
+    /*background-color: orange*/
+
+}
 .header {
     text-align: center;
     /*color: red;*/
