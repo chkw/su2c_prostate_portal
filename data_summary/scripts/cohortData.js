@@ -51,7 +51,6 @@ function patientData(data) {
 
     var noForm = "not assessed";
     var unknown = "unknown";
-    var noData = "no data";
 
     /**
      * Check if patient has this datatype.
@@ -59,7 +58,7 @@ function patientData(data) {
      */
     this.getDatatype = function(datatype) {
         var datatypeL = datatype.trim().toLowerCase();
-        var result = noData;
+        var result = datatype + " not available";
         if (this.data == null) {
             // do nothing
             return result;
@@ -69,9 +68,9 @@ function patientData(data) {
 
         // search for datatype
         for (var i in this.data["datatypes"]) {
-            var typeL = this.data["datatype"][i].trim().toLowerCase();
+            var typeL = this.data["datatypes"][i].trim().toLowerCase();
             if (datatypeL == typeL) {
-                result = datatype;
+                result = datatype + " available";
                 break;
             }
         }
@@ -366,8 +365,8 @@ function cohortData(deserializedCohortJson) {
             patientVal = this.getPatient(id).getDatatype("aCGH");
         } else if (featureL == 'rnaseq') {
             patientVal = this.getPatient(id).getDatatype("RNAseq");
-        } else if (featureL == 'fish') {
-            patientVal = this.getPatient(id).getDatatype("FISH");
+        } else if (featureL == 'ar_fish') {
+            patientVal = this.getPatient(id).getDatatype("AR_FISH");
         }
         return patientVal;
     };
