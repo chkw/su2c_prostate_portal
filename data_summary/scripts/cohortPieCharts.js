@@ -282,6 +282,9 @@ function redrawCharts() {
     redrawNewData(acghChart, cohort.getPatientCounts(selectedIds, 'acgh'));
     redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
     redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'ar_fish'));
+    redrawNewData(ptenIhcChart, cohort.getPatientCounts(selectedIds, 'pten_ihc'));
+    redrawNewData(mutationChart, cohort.getPatientCounts(selectedIds, 'mutation'));
+    redrawNewData(rnaMutationChart, cohort.getPatientCounts(selectedIds, 'rna-mutation call'));
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -313,6 +316,10 @@ function initializeCharts() {
 
     rnaseqChart = initializeChart("chart7", "Number of Samples by RNAseq Data", 'rnaseq', selectedIds);
     fishChart = initializeChart("chart8", "Number of Samples by FISH Data", 'ar_fish', selectedIds);
+    ptenIhcChart = initializeChart("chart9", "Number of Samples by PTEN_IHC", 'pten_ihc', selectedIds);
+
+    mutationChart = initializeChart("chart10", "Number of Samples by mutation Data", 'mutation', selectedIds);
+    rnaMutationChart = initializeChart("chart11", "Number of Samples by RNA-mutation call Data", 'rna-mutation call', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -325,6 +332,9 @@ var ctcChart = null;
 var acghChart = null;
 var rnaseqChart = null;
 var fishChart = null;
+var ptenIhcChart = null;
+var mutationChart = null;
+var rnaMutationChart = null;
 
 var selectionCriteria = new selectionCriteria();
 var cohort = null;

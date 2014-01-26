@@ -367,6 +367,12 @@ function cohortData(deserializedCohortJson) {
             patientVal = this.getPatient(id).getDatatype("RNAseq");
         } else if (featureL == 'ar_fish') {
             patientVal = this.getPatient(id).getDatatype("AR_FISH");
+        } else if (featureL == 'pten_ihc') {
+            patientVal = this.getPatient(id).getDatatype("PTEN_IHC");
+        } else if (featureL == 'mutation') {
+            patientVal = this.getPatient(id).getDatatype("mutation");
+        } else if (featureL == 'rna-mutation call') {
+            patientVal = this.getPatient(id).getDatatype("rna-mutation call");
         }
         return patientVal;
     };
