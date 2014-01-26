@@ -19,7 +19,7 @@ function getResponse(url) {
     xhr.onload = function() {
         var status = xhr.status;
         if (status != 200) {
-            logConsole("xhr error: " + status);
+            console.log("xhr error: " + status);
         }
     };
     xhr.send(null);
