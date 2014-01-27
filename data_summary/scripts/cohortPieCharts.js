@@ -6,7 +6,7 @@
 
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
-var dataUrl = "data_summary/data/cohort_20140121.json";
+var dataUrl = "data_summary/data/cohort_20140127.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
 
 /*
@@ -39,9 +39,23 @@ function setCohortData(url) {
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
 
-    // console.log(JSON.stringify(contents, null, '\t'));
+    var contents2 = JSON && JSON.parse(contents["contents"]) || $.parseJSON(contents["contents"]);
 
-    var cohort = new cohortData(contents);
+
+    // for (var i in parsedResponse) {
+    // console.log("parsedResponse->" + i);
+    // }
+    //
+    // for (var i in contents) {
+    // console.log("contents->" + i);
+    // }
+    //
+    // for (var i in contents2) {
+    // console.log("contents2->" + i);
+    // }
+
+
+    var cohort = new cohortData(contents2);
 
     var ids = cohort.getAllPatientIds();
     var datatypeData = getDatatypeData(datatypeUrl);
