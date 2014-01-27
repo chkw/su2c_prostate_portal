@@ -97,7 +97,7 @@ var plotOptions = {
         dataLabels : {
             enabled : true,
             color : 'black',
-            connectorColor : 'gray',
+            // connectorColor : 'gray',
             distance : 5,
             // format : '<b>{point.name}</b>: {point.y}',
             format : '{point.y}'
