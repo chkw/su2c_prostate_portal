@@ -306,20 +306,20 @@ function initializeChart(containingDivId, title, dataFeature, selectedIds) {
 function initializeCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    studySiteChart = initializeChart("chart1", "Number of Samples by Study Site", 'studySite', selectedIds);
-    biopsySiteChart = initializeChart("chart2", "Number of Samples by Biopsy Site", 'biopsySite', selectedIds);
-    subsequentDrugsChart = initializeChart("chart3", "Number of Samples by On-Study Drugs", 'subsequentDrugs', selectedIds);
+    studySiteChart = initializeChart("chart1", "Study Site", 'studySite', selectedIds);
+    biopsySiteChart = initializeChart("chart2", "Biopsy Site", 'biopsySite', selectedIds);
+    subsequentDrugsChart = initializeChart("chart3", "On-Study Drugs", 'subsequentDrugs', selectedIds);
 
-    treatmentDetailsChart = initializeChart("chart4", "Number of Samples by Treatment Details", 'treatmentDetails', selectedIds);
-    ctcChart = initializeChart("chart5", "Number of Samples by CTC Data", 'ctc', selectedIds);
-    acghChart = initializeChart("chart6", "Number of Samples by aCGH Data", 'acgh', selectedIds);
+    treatmentDetailsChart = initializeChart("chart4", "Treatment Details", 'treatmentDetails', selectedIds);
+    ctcChart = initializeChart("chart5", "CTC Data", 'ctc', selectedIds);
+    acghChart = initializeChart("chart6", "aCGH Data", 'acgh', selectedIds);
 
-    rnaseqChart = initializeChart("chart7", "Number of Samples by RNAseq Data", 'rnaseq', selectedIds);
-    fishChart = initializeChart("chart8", "Number of Samples by FISH Data", 'ar_fish', selectedIds);
-    ptenIhcChart = initializeChart("chart9", "Number of Samples by PTEN_IHC", 'pten_ihc', selectedIds);
+    rnaseqChart = initializeChart("chart7", "RNAseq Data", 'rnaseq', selectedIds);
+    fishChart = initializeChart("chart8", "FISH Data", 'ar_fish', selectedIds);
+    ptenIhcChart = initializeChart("chart9", "PTEN_IHC Data", 'pten_ihc', selectedIds);
 
-    mutationChart = initializeChart("chart10", "Number of Samples by mutation Data", 'mutation', selectedIds);
-    rnaMutationChart = initializeChart("chart11", "Number of Samples by RNA-mutation call Data", 'rna-mutation call', selectedIds);
+    mutationChart = initializeChart("chart10", "mutation Data", 'mutation', selectedIds);
+    rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
 }
