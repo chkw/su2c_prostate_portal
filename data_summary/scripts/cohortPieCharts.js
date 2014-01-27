@@ -29,6 +29,13 @@ function getResponse(url) {
 }
 
 /**
+ * Get a pretty JSON.
+ */
+function prettyJson(object) {
+    return JSON.stringify(object, null, '\t');
+}
+
+/**
  * get the JSON data to create a cohortData object.
  */
 function setCohortData(url) {
@@ -41,7 +48,6 @@ function setCohortData(url) {
 
     var contents2 = JSON && JSON.parse(contents["contents"]) || $.parseJSON(contents["contents"]);
 
-
     // for (var i in parsedResponse) {
     // console.log("parsedResponse->" + i);
     // }
@@ -53,7 +59,6 @@ function setCohortData(url) {
     // for (var i in contents2) {
     // console.log("contents2->" + i);
     // }
-
 
     var cohort = new cohortData(contents2);
 
