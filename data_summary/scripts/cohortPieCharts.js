@@ -318,7 +318,7 @@ function initializeCharts() {
     fishChart = initializeChart("chart8", "FISH Data", 'ar_fish', selectedIds);
     ptenIhcChart = initializeChart("chart9", "PTEN_IHC Data", 'pten_ihc', selectedIds);
 
-    mutationChart = initializeChart("chart10", "mutation Data", 'mutation', selectedIds);
+    mutationChart = initializeChart("chart10", "Mutation Data", 'mutation', selectedIds);
     rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
