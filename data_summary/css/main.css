@@ -7,12 +7,12 @@ html {
 table {
     font-size: smaller;
     font-weight: normal;
-
     /*background-color: orange*/
 
 }
 .header {
     text-align: center;
+    font-size: x-large
     /*color: red;*/
     /*background-color: yellow;*/
     /*border: 0px solid;*/
