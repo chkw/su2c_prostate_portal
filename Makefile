@@ -9,11 +9,9 @@ TARGET_DIR = ~/Documents/eclipse_workspace/medbook-galaxy-central/static
 test:
 
 deploy:
-	cp data_summary.html $(TARGET_DIR) ;
+	rsync -avP data_summary.html $(TARGET_DIR)/. ;
 	\
-	cp -r data_summary/ $(TARGET_DIR) ;
-	\
-	rm -rf $(TARGET_DIR)/data_summary/data/ ;
+	rsync -avP --exclude="data_summary/data/" --delete-excluded data_summary $(TARGET_DIR)/. ;
 	\
 	
 remove:
