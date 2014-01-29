@@ -6,6 +6,7 @@
 
 // on https://su2c-dev.ucsc.edu/
 //var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
+// var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
 var dataUrl = "data_summary/data/cohort_20140127.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
 
@@ -302,8 +303,8 @@ function redrawCharts() {
     redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
     redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'ar_fish'));
     redrawNewData(ptenIhcChart, cohort.getPatientCounts(selectedIds, 'pten_ihc'));
-    redrawNewData(mutationChart, cohort.getPatientCounts(selectedIds, 'mutation'));
-    redrawNewData(rnaMutationChart, cohort.getPatientCounts(selectedIds, 'rna-mutation call'));
+    redrawNewData(mutationPanelChart, cohort.getPatientCounts(selectedIds, 'mutation_panel'));
+    // redrawNewData(rnaMutationChart, cohort.getPatientCounts(selectedIds, 'rna-mutation call'));
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -337,8 +338,8 @@ function initializeCharts() {
     fishChart = initializeChart("chart8", "FISH Data", 'ar_fish', selectedIds);
     ptenIhcChart = initializeChart("chart9", "PTEN_IHC Data", 'pten_ihc', selectedIds);
 
-    mutationChart = initializeChart("chart10", "Mutation Data", 'mutation', selectedIds);
-    rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
+    mutationPanelChart = initializeChart("chart10", "Mutation Panel Data", 'mutation_panel', selectedIds);
+    // rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -352,23 +353,25 @@ var acghChart = null;
 var rnaseqChart = null;
 var fishChart = null;
 var ptenIhcChart = null;
-var mutationChart = null;
-var rnaMutationChart = null;
+var mutationPanelChart = null;
+// var rnaMutationChart = null;
 
 var selectionCriteria = new selectionCriteria();
 var cohort = null;
 
 function getDatatypeData(url) {
     var response = getResponse(datatypeUrl);
-    var datatypeData = d3.tsv.parse(response);
+    var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
+    var contents = parsedResponse["contents"];
+    var datatypeData = d3.tsv.parse(contents);
     var datatypesObj = new Object();
     for (var i in datatypeData) {
         var row = datatypeData[i];
-        var id = row[""];
+        var id = row["Sample"];
         var datatypes = new Array();
         for (var feature in row) {
             var value = row[feature];
-            if (feature.trim() != "" && value != null && value.trim() != "") {
+            if (feature.trim() != "" && feature.trim() != "id" && feature.trim() != "Sample" && value != null && value.trim() != "") {
                 datatypes.push(feature.trim());
             }
         }
