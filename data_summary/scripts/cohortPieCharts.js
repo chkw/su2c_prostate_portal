@@ -5,27 +5,30 @@
  */
 
 // on https://su2c-dev.ucsc.edu/
-//var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
-// var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
-var dataUrl = "data_summary/data/cohort_20140127.json";
-var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
+var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
+var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
+// var dataUrl = "data_summary/data/cohort_20140127.json";
+// var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
 
 /*
  * Synchronous GET
  */
 function getResponse(url) {
+    var status = null;
     var xhr = null;
     xhr = new XMLHttpRequest();
     xhr.open("GET", url, false);
     xhr.onload = function() {
-        var status = xhr.status;
+        status = xhr.status;
         if (status != 200) {
-            console.log("xhr error: " + status);
+            console.log("xhr status: " + status + " for " + url);
         }
     };
     xhr.send(null);
-    var response = xhr.responseText;
-
+    var response = null;
+    if (status == 200) {
+        response = xhr.responseText;
+    }
     return response;
 }
 
@@ -361,6 +364,9 @@ var cohort = null;
 
 function getDatatypeData(url) {
     var response = getResponse(datatypeUrl);
+    if (response == null) {
+        return new Object();
+    }
     var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
     var contents = parsedResponse["contents"];
     var datatypeData = d3.tsv.parse(contents);
