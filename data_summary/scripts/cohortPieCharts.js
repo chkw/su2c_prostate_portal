@@ -5,10 +5,10 @@
  */
 
 // on https://su2c-dev.ucsc.edu/
-var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
-var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
-// var dataUrl = "data_summary/data/cohort_20140127.json";
-// var datatypeUrl = "data_summary/data/WCDT_datatypes.tab";
+// var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
+// var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
+var dataUrl = "data_summary/data/cohort_20140227.json";
+var datatypeUrl = "data_summary/data/WCDT_datatypes_20140227.tab";
 
 /*
  * Synchronous GET
@@ -287,8 +287,33 @@ function setNewChartData(chartObject, chartData) {
  * Set the new chart data and redraw.
  */
 function redrawNewData(chart, data) {
+    var colorMapping = extractColorMapping(chart);
+    console.log(prettyJson(colorMapping));
+
+    console.log("new data", prettyJson(data));
+    for (var i = 0; i < data.length; i++) {
+        var color = colorMapping[data[i]["name"]];
+        data[i]["color"] = color;
+    }
+
     setNewChartData(chart, data);
     chart.redraw();
+}
+
+/**
+ * Get the color mapping from a chart.
+ */
+function extractColorMapping(chart) {
+    var mapping = {};
+    var data = chart.series[0]["options"]["data"];
+    var colors = chart["options"]["colors"];
+
+    for (var i = 0; i < data.length; i++) {
+        var name = data[i].name;
+        var color = colors[(i % colors.length)];
+        mapping[name] = color;
+    }
+    return mapping;
 }
 
 /**
