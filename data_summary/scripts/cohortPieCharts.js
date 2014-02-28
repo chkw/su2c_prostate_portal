@@ -287,15 +287,23 @@ function setNewChartData(chartObject, chartData) {
  * Set the new chart data and redraw.
  */
 function redrawNewData(chart, data) {
-    var colorMapping = extractColorMapping(chart);
-    console.log(prettyJson(colorMapping));
 
-    console.log("new data", prettyJson(data));
+    // recover slice color mapping for chart
+    var title = chart["options"]["title"]["text"];
+    if ( title in sliceColorMapping) {
+    } else {
+        sliceColorMapping[title] = extractColorMapping(chart);
+    }
+
+    var colorMapping = sliceColorMapping[title];
+
+    // set slice colors in data object
     for (var i = 0; i < data.length; i++) {
         var color = colorMapping[data[i]["name"]];
         data[i]["color"] = color;
     }
 
+    // set new data for chart
     setNewChartData(chart, data);
     chart.redraw();
 }
@@ -383,6 +391,8 @@ var fishChart = null;
 var ptenIhcChart = null;
 var mutationPanelChart = null;
 // var rnaMutationChart = null;
+
+var sliceColorMapping = {};
 
 var selectionCriteria = new selectionCriteria();
 var cohort = null;
