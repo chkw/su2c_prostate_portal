@@ -14,6 +14,9 @@ var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
 // production
 // var tissueCollectionUrl = "/datasets/0d4fc529a5c0a824/display?to_ext=tabular";
 
+// dev
+// var tissueCollectionUrl = "/datasets/575e3720abce92ce/display?to_ext=tabular";
+
 // iMac
 //var tissueCollectionUrl = "/datasets/1293ccba69ef044e/display?to_ext=tabular";
 
