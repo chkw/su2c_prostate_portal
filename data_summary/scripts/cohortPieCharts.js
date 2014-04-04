@@ -424,6 +424,13 @@ function getDatatypeData(url) {
     return datatypesObj;
 }
 
+function test_chart() {
+    var response = getResponse("data_summary/data/tissue_collection.tsv");
+    // console.log(response);
+    var parsedResponse = d3.tsv.parse(response);
+    console.log(parsedResponse);
+}
+
 // TODO onload
 window.onload = function() {
 
@@ -435,4 +442,6 @@ window.onload = function() {
     cohort = setCohortData(dataUrl);
 
     initializeCharts();
+
+    test_chart();
 };
