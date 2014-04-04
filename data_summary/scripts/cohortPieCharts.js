@@ -9,6 +9,13 @@
 // var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
 var dataUrl = "data_summary/data/cohort_20140227.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140227.tab";
+var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
+
+// production
+// var tissueCollectionUrl = "/datasets/0d4fc529a5c0a824/display?to_ext=tabular";
+
+// iMac
+//var tissueCollectionUrl = "/datasets/1293ccba69ef044e/display?to_ext=tabular";
 
 /*
  * Synchronous GET
@@ -424,8 +431,8 @@ function getDatatypeData(url) {
     return datatypesObj;
 }
 
-function test_chart() {
-    var response = getResponse("data_summary/data/tissue_collection.tsv");
+function test_chart(url) {
+    var response = getResponse(url);
     var rows = d3.tsv.parse(response);
 
     var data = {};
@@ -526,5 +533,5 @@ window.onload = function() {
 
     initializeCharts();
 
-    test_chart();
+    test_chart(tissueCollectionUrl);
 };
