@@ -435,6 +435,129 @@ function getDatatypeData(url) {
     return datatypesObj;
 }
 
+function tissueCollectionChart(url) {
+    var response = getResponse(url);
+    var rows = d3.tsv.parse(response);
+
+    var data = {};
+    var locationCounts = {};
+    var seriesObjects = {};
+    var series = [];
+    for (var i = 0; i < rows.length; i++) {
+        var sampleData = rows[i];
+        var date = sampleData['Biopsy Date'];
+        var location = sampleData['Biopsy Location'];
+        if ( date in data) {
+        } else {
+            data[date] = [];
+        }
+
+        if ( location in locationCounts) {
+
+        } else {
+            locationCounts[location] = 0;
+            seriesObjects[location] = {
+                'name' : location,
+                'data' : []
+            };
+            series.push(seriesObjects[location]);
+
+        }
+        data[date].push(location);
+    }
+
+    // console.log(prettyJson(data));
+    // console.log(seriesObjects);
+    // console.log(locationCounts);
+
+    var dates = Object.keys(data);
+    // sort by increasing date
+    dates.sort(function(a, b) {
+        a = new Date(a);
+        b = new Date(b);
+        return a > b ? 1 : a < b ? -1 : 0;
+    });
+
+    // console.log(dates);
+
+    // console.log(series);
+
+    for (var i = 0; i < dates.length; i++) {
+        var date = dates[i];
+
+        var d = date.split("/");
+        var year = '20' + d[2];
+        var month = d[0] - 1;
+        var day = d[1] - 1;
+
+        var locationList = data[date];
+
+        for (var j = 0; j < locationList.length; j++) {
+            var location = locationList[j];
+            locationCounts[location]++;
+        }
+
+        for (var location in locationCounts) {
+            var pointData = [Date.UTC(year, month), locationCounts[location]];
+            seriesObjects[location]['data'].push(pointData);
+        }
+    }
+
+    // console.log(prettyJson(series));
+
+    $('#chart_test2').highcharts({
+        credits : {
+            enabled : false
+        },
+        chart : {
+            // type : 'spline',
+            type : 'column',
+        },
+        title : {
+            text : 'Biopsy Samples Collected'
+        },
+
+        // subtitle : {
+        // text : 'Irregular time data in Highcharts JS'
+        // },
+
+        xAxis : {
+            type : 'datetime',
+
+            // dateTimeLabelFormats : {// don't display the dummy year
+            // month : '%e. %b',
+            // year : '%b'
+            // }
+
+        },
+        yAxis : {
+            title : {
+                text : 'samples collected'
+            },
+            min : 0
+        },
+        tooltip : {
+            formatter : function() {
+                return this.y + ' total <b>' + this.series.name + '</b> samples collected<br/>' + Highcharts.dateFormat('%Y-%m', this.x);
+            }
+        },
+        plotOptions : {
+            column : {
+                stacking : 'normal',
+                dataLabels : {
+                    enabled : false,
+                    color : (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style : {
+                        textShadow : '0 0 3px black, 0 0 3px black'
+                    }
+                }
+            }
+        },
+        'series' : series
+    });
+
+}
+
 function test_chart(url) {
     var response = getResponse(url);
     var rows = d3.tsv.parse(response);
@@ -460,10 +583,15 @@ function test_chart(url) {
     });
     var series = [];
 
-    var series1 = {
+    var series_total = {
         "name" : "biopsies collected",
         'data' : []
     };
+
+    var locationData = {};
+
+    series.push(series_total);
+    // series.push(series_location);
 
     var total = 0;
     for (var i = 0; i < dates.length; i++) {
@@ -478,9 +606,8 @@ function test_chart(url) {
         total += numSamples;
         // var pointData = [date, numSamples];
         var pointData = [Date.UTC(year, month), total];
-        series1['data'].push(pointData);
+        series_total['data'].push(pointData);
     }
-    series.push(series1);
 
     // console.log(prettyJson(series));
 
@@ -517,9 +644,23 @@ function test_chart(url) {
         },
         tooltip : {
             formatter : function() {
-                return '<b>' + this.series.name + '</b><br/>' + this.y + ' total samples collected<br/>' + Highcharts.dateFormat('%Y-%m-%d', this.x);
+                return '<b>' + this.series.name + '</b><br/>' + this.y + ' total samples collected<br/>' + Highcharts.dateFormat('%Y-%m', this.x);
             }
         },
+
+        // plotOptions : {
+        // column : {
+        // stacking : 'normal',
+        // dataLabels : {
+        // enabled : true,
+        // color : (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+        // style : {
+        // textShadow : '0 0 3px black, 0 0 3px black'
+        // }
+        // }
+        // }
+        // },
+
         'series' : series
     });
 
@@ -538,4 +679,5 @@ window.onload = function() {
     initializeCharts();
 
     test_chart(tissueCollectionUrl);
+    tissueCollectionChart(tissueCollectionUrl);
 };
