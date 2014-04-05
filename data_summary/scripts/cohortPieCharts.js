@@ -482,6 +482,7 @@ function tissueCollectionChart(url) {
 
     // console.log(series);
 
+    var currMonthYear = null;
     for (var i = 0; i < dates.length; i++) {
         var date = dates[i];
 
@@ -490,6 +491,30 @@ function tissueCollectionChart(url) {
         var month = d[0] - 1;
         var day = d[1] - 1;
 
+        if (currMonthYear == null) {
+            // set initial status
+            currMonthYear = month + "/" + year;
+        }
+
+        if ((currMonthYear !== month + "/" + year) || (i == dates.length - 1)) {
+            if (i == dates.length - 1) {
+                // increment counters for last data point
+                var locationList = data[date];
+
+                for (var j = 0; j < locationList.length; j++) {
+                    var location = locationList[j];
+                    locationCounts[location]++;
+                }
+            }
+
+            // save data points
+            for (var location in locationCounts) {
+                var pointDate = currMonthYear.split("/");
+                var pointData = [Date.UTC(pointDate[1], pointDate[0]), locationCounts[location]];
+                seriesObjects[location]['data'].push(pointData);
+            }
+        }
+        // increment counters
         var locationList = data[date];
 
         for (var j = 0; j < locationList.length; j++) {
@@ -497,13 +522,11 @@ function tissueCollectionChart(url) {
             locationCounts[location]++;
         }
 
-        for (var location in locationCounts) {
-            var pointData = [Date.UTC(year, month), locationCounts[location]];
-            seriesObjects[location]['data'].push(pointData);
-        }
+        currMonthYear = month + "/" + year;
+        // console.log(d, prettyJson(locationCounts));
     }
 
-    console.log(prettyJson(series));
+    // console.log((series));
 
     $('#chart_test2').highcharts({
         credits : {
@@ -514,7 +537,7 @@ function tissueCollectionChart(url) {
             type : 'column',
         },
         title : {
-            text : 'Biopsy Samples Collected'
+            text : 'Tissue of Biopsy Samples Collected'
         },
 
         // subtitle : {
@@ -532,7 +555,7 @@ function tissueCollectionChart(url) {
         },
         yAxis : {
             title : {
-                text : 'samples collected'
+                text : 'total samples collected'
             },
             min : 0,
             stackLabels : {
@@ -545,7 +568,7 @@ function tissueCollectionChart(url) {
         },
         tooltip : {
             formatter : function() {
-                return this.y + ' total <b>' + this.series.name + '</b> samples collected<br/>' + Highcharts.dateFormat('%Y-%m', this.x);
+                return this.y + ' total <b>' + this.series.name + '</b> samples collected<br/>' + Highcharts.dateFormat('%m-%Y', this.x);
             }
         },
         plotOptions : {
@@ -685,6 +708,6 @@ window.onload = function() {
 
     initializeCharts();
 
-    test_chart(tissueCollectionUrl);
+    // test_chart(tissueCollectionUrl);
     tissueCollectionChart(tissueCollectionUrl);
 };
