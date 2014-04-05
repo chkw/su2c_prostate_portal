@@ -503,7 +503,7 @@ function tissueCollectionChart(url) {
         }
     }
 
-    // console.log(prettyJson(series));
+    console.log(prettyJson(series));
 
     $('#chart_test2').highcharts({
         credits : {
@@ -534,7 +534,14 @@ function tissueCollectionChart(url) {
             title : {
                 text : 'samples collected'
             },
-            min : 0
+            min : 0,
+            stackLabels : {
+                enabled : true,
+                style : {
+                    fontWeight : 'bold',
+                    color : (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
         },
         tooltip : {
             formatter : function() {
