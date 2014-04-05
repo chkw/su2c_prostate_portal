@@ -497,7 +497,14 @@ function tissueCollectionChart(url) {
         }
 
         if ((currMonthYear !== month + "/" + year) || (i == dates.length - 1)) {
-            if (i == dates.length - 1) {
+            // save data points
+            for (var location in locationCounts) {
+                var pointDate = currMonthYear.split("/");
+                var pointData = [Date.UTC(pointDate[1], pointDate[0]), locationCounts[location]];
+                seriesObjects[location]['data'].push(pointData);
+            }
+
+            if ((currMonthYear !== month + "/" + year) && (i == dates.length - 1)) {
                 // increment counters for last data point
                 var locationList = data[date];
 
@@ -505,13 +512,12 @@ function tissueCollectionChart(url) {
                     var location = locationList[j];
                     locationCounts[location]++;
                 }
-            }
 
-            // save data points
-            for (var location in locationCounts) {
-                var pointDate = currMonthYear.split("/");
-                var pointData = [Date.UTC(pointDate[1], pointDate[0]), locationCounts[location]];
-                seriesObjects[location]['data'].push(pointData);
+                // save data points
+                for (var location in locationCounts) {
+                    var pointData = [Date.UTC(year, month), locationCounts[location]];
+                    seriesObjects[location]['data'].push(pointData);
+                }
             }
         }
         // increment counters
@@ -708,6 +714,6 @@ window.onload = function() {
 
     initializeCharts();
 
-    // test_chart(tissueCollectionUrl);
+    test_chart(tissueCollectionUrl);
     tissueCollectionChart(tissueCollectionUrl);
 };
