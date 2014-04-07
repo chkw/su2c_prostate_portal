@@ -8,6 +8,7 @@
 // var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
 // var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
 // var tissueCollectionUrl = "/api/medbook/book/assetsBook/WCDT/clinical data/SU2C Collection Data - Tissue Collection Data.tabular.tsv";
+// var tissueCollectionUrl = "/api/asset/download/WCDT/clinical%20data/SU2C%20Collection%20Data%20-%20Tissue%20Collection%20Data.tabular.tsv";
 var dataUrl = "data_summary/data/cohort_20140227.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140227.tab";
 var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
