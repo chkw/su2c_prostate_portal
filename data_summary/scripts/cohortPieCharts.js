@@ -6,10 +6,12 @@
 
 // on https://su2c-dev.ucsc.edu/
 // var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort.json";
+// var dataUrl = "/api/medbook/book/assetsBook/wiki/overview%20reports/cohort2.json";
 // var datatypeUrl = "/api/medbook/book/assetsBook/WCDT/WCDT_datatypes.tab";
 // var tissueCollectionUrl = "/api/medbook/book/assetsBook/WCDT/clinical data/SU2C Collection Data - Tissue Collection Data.tabular.tsv";
 // var tissueCollectionUrl = "/api/asset/download/WCDT/clinical%20data/SU2C%20Collection%20Data%20-%20Tissue%20Collection%20Data.tabular.tsv";
-var dataUrl = "data_summary/data/cohort_20140227.json";
+// var dataUrl = "data_summary/data/cohort_20140227.json";
+var dataUrl = "data_summary/data/cohort2.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140227.tab";
 var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
 
@@ -59,10 +61,16 @@ function setCohortData(url) {
 
     var parsedResponse = JSON && JSON.parse(response) || $.parseJSON(response);
 
+    // console.log("parsedResponse", prettyJson(parsedResponse));
+
     // value of contents is a stringified JSON
     var contents = JSON && JSON.parse(parsedResponse["contents"]) || $.parseJSON(parsedResponse["contents"]);
 
-    var contents2 = JSON && JSON.parse(contents["contents"]) || $.parseJSON(contents["contents"]);
+    // console.log("contents", prettyJson(contents));
+
+    // var contents2 = JSON && JSON.parse(contents["contents"]) || $.parseJSON(contents["contents"]);
+
+    // console.log("contents2", prettyJson(contents2));
 
     // for (var i in parsedResponse) {
     // console.log("parsedResponse->" + i);
@@ -76,7 +84,7 @@ function setCohortData(url) {
     // console.log("contents2->" + i);
     // }
 
-    var cohort = new cohortData(contents2);
+    var cohort = new cohortData(contents);
 
     var ids = cohort.getAllPatientIds();
     var datatypeData = getDatatypeData(datatypeUrl);

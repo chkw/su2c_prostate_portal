@@ -143,10 +143,15 @@ function patientData(data) {
             };
             result = noForm;
         } else {
-            var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"].trim();
+            // var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"].trim();
+
+            var val = this.data["attributes"]["SU2C Biopsy V2"]["Site"];
             if (val == null) {
                 this.data["attributes"]["SU2C Biopsy V2"]["Site"] = unknown;
                 val = unknown;
+            } else if ( val instanceof Array) {
+                val = eliminateDuplicates(val).sort();
+                val = val.join(",");
             }
             result = val;
         }
