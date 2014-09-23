@@ -11,8 +11,8 @@
 // var tissueCollectionUrl = "/api/medbook/book/assetsBook/WCDT/clinical data/SU2C Collection Data - Tissue Collection Data.tabular.tsv";
 // var tissueCollectionUrl = "/api/asset/download/WCDT/clinical%20data/SU2C%20Collection%20Data%20-%20Tissue%20Collection%20Data.tabular.tsv";
 // var dataUrl = "data_summary/data/cohort_20140227.json";
-var dataUrl = "data_summary/data/cohort2.json";
-var datatypeUrl = "data_summary/data/WCDT_datatypes_20140227.tab";
+var dataUrl = "data_summary/data/cohort2_20140922.json";
+var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
 var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
 
 // production
@@ -353,7 +353,7 @@ function redrawCharts() {
     redrawNewData(studySiteChart, cohort.getPatientCounts(selectedIds, 'studysite'));
     redrawNewData(biopsySiteChart, cohort.getPatientCounts(selectedIds, 'biopsysite'));
     redrawNewData(subsequentDrugsChart, cohort.getPatientCounts(selectedIds, 'subsequentdrugs'));
-    redrawNewData(treatmentDetailsChart, cohort.getPatientCounts(selectedIds, 'treatmentdetails'));
+    // redrawNewData(treatmentDetailsChart, cohort.getPatientCounts(selectedIds, 'treatmentdetails'));
     redrawNewData(ctcChart, cohort.getPatientCounts(selectedIds, 'ctc'));
     redrawNewData(acghChart, cohort.getPatientCounts(selectedIds, 'acgh'));
     redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
@@ -386,7 +386,8 @@ function initializeCharts() {
     biopsySiteChart = initializeChart("chart2", "Biopsy Site", 'biopsySite', selectedIds);
     subsequentDrugsChart = initializeChart("chart3", "On-Study Drugs", 'subsequentDrugs', selectedIds);
 
-    treatmentDetailsChart = initializeChart("chart4", "Treatment Details", 'treatmentDetails', selectedIds);
+    // treatmentDetailsChart = initializeChart("chart4", "Treatment Details", 'treatmentDetails', selectedIds);
+    mutationPanelChart = initializeChart("chart4", "Mutation Panel Data", 'mutation_panel', selectedIds);
     ctcChart = initializeChart("chart5", "CTC Data", 'ctc', selectedIds);
     acghChart = initializeChart("chart6", "aCGH Data", 'acgh', selectedIds);
 
@@ -394,7 +395,7 @@ function initializeCharts() {
     fishChart = initializeChart("chart8", "FISH Data", 'ar_fish', selectedIds);
     ptenIhcChart = initializeChart("chart9", "PTEN_IHC Data", 'pten_ihc', selectedIds);
 
-    mutationPanelChart = initializeChart("chart10", "Mutation Panel Data", 'mutation_panel', selectedIds);
+    // mutationPanelChart = initializeChart("chart10", "Mutation Panel Data", 'mutation_panel', selectedIds);
     // rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
 
     updateChartCrumbs(selectionCriteria);
@@ -403,7 +404,7 @@ function initializeCharts() {
 var studySiteChart = null;
 var biopsySiteChart = null;
 var subsequentDrugsChart = null;
-var treatmentDetailsChart = null;
+// var treatmentDetailsChart = null;
 var ctcChart = null;
 var acghChart = null;
 var rnaseqChart = null;
