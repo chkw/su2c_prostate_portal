@@ -363,8 +363,9 @@ var initializeCharts = function(chartIdList) {
  */
 var setupDiv = function(containerDivId, chartNames) {
     var parentDivElem = document.getElementById(containerDivId);
+    removeChildElems(parentDivElem);
 
-    parentDivElem.appendChild(createDivElement('chartCrumbsDiv'));
+    parentDivElem.appendChild(createDivElement('chartCrumbs'));
 
     for (var i = 0; i < chartNames.length; i++) {
         var containerDivElem = createDivElement('chart' + (i + 1) + '_container', 'pieChartContainer');
