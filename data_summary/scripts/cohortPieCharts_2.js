@@ -16,10 +16,15 @@
 var dataUrl = "data_summary/data/cohort2_20140922.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
 
+var chartObjMapping = {};
+var sliceColorMapping = {};
+var selectionCriteria = new selectionCriteria();
+var cohort = null;
+
 /**
  * get the JSON data to create a cohortData object.
  */
-function setCohortData(url) {
+var setCohortData = function(url) {
     var response = getResponse(url);
 
     var parsedResponse = parseJson(response);
@@ -38,7 +43,36 @@ function setCohortData(url) {
     }
 
     return cohort;
-}
+};
+
+var getDatatypeData = function(url) {
+    var response = getResponse(datatypeUrl);
+    if (response == null) {
+        return new Object();
+    }
+    var parsedResponse = parseJson(response);
+    var contents = parsedResponse["contents"];
+    var datatypeData = $.csv.toObjects(contents, {
+        'separator' : '\t'
+    });
+    var datatypesObj = new Object();
+    for (var i in datatypeData) {
+        var row = datatypeData[i];
+        var id = row["Sample"];
+        var datatypes = new Array();
+        for (var feature in row) {
+            var value = row[feature];
+            if (feature.trim() != "" && feature.trim() != "id" && feature.trim() != "Sample" && value != null && value.trim() != "") {
+                datatypes.push(feature.trim());
+            }
+        }
+        if (datatypes.length >= 1) {
+            datatypesObj[id] = new Object();
+            datatypesObj[id]["datatypes"] = datatypes;
+        }
+    }
+    return datatypesObj;
+};
 
 Highcharts.setOptions({
     chart : {
@@ -136,9 +170,9 @@ var pieChartOptionsTemplate = {
  * @param {Object} elementId
  * @param {Object} chartOptions
  */
-function setChartRenderTo(elementId, chartOptions) {
+var setChartRenderTo = function(elementId, chartOptions) {
     chartOptions["chart"]["renderTo"] = elementId;
-}
+};
 
 /**
  * Set the chart series.
@@ -146,19 +180,19 @@ function setChartRenderTo(elementId, chartOptions) {
  * @param {Object} seriesData
  * @param {Object} chart
  */
-function setChartSeries(seriesName, seriesData, chartOptions) {
+var setChartSeries = function(seriesName, seriesData, chartOptions) {
     chartOptions["series"][0]["name"] = seriesName;
     chartOptions["series"][0]["data"] = seriesData;
-}
+};
 
 /**
  * Set the chart title.
  * @param {Object} title
  * @param {Object} chartOptions
  */
-function setChartTitle(title, chartOptions) {
+var setChartTitle = function(title, chartOptions) {
     chartOptions["title"]["text"] = title;
-}
+};
 
 /**
  * Setup chartOptions... returns the chartOptions.
@@ -168,17 +202,17 @@ function setChartTitle(title, chartOptions) {
  * @param {Object} title
  * @param {Object} chartOptions
  */
-function setupChartOptions(renderTo, seriesName, seriesData, title, chartOptions) {
+var setupChartOptions = function(renderTo, seriesName, seriesData, title, chartOptions) {
     setChartRenderTo(renderTo, chartOptions);
     setChartSeries(seriesName, seriesData, chartOptions);
     setChartTitle(title, chartOptions);
     return chartOptions;
-}
+};
 
 /**
  * Create a button element to remove a filter from selectionCriteria.
  */
-function createCrumbButton(feature, value) {
+var createCrumbButton = function(feature, value) {
     var innerHtml = feature + "<br>" + value;
     var buttonElement = $("<button class='crumbButton'>" + innerHtml + "</button>").hover(function() {
         this.innerHTML = "<s>" + innerHtml + "</s>";
@@ -189,12 +223,12 @@ function createCrumbButton(feature, value) {
         redrawCharts();
     });
     return buttonElement;
-}
+};
 
 /**
  * Update the chart crumbs.
  */
-function updateChartCrumbs(selectionCriteria) {
+var updateChartCrumbs = function(selectionCriteria) {
     var id = "chartCrumbs";
     var e = document.getElementById(id);
     e.innerHTML = "applied filters: ";
@@ -204,12 +238,12 @@ function updateChartCrumbs(selectionCriteria) {
         var value = criteria[i]["value"];
         createCrumbButton(feature, value).appendTo(e);
     }
-}
+};
 
 /**
  * Move a chart to the top.  Assumes the chart is in a container div.
  */
-function moveChartUp(promotedChartDiv) {
+var moveChartUp = function(promotedChartDiv) {
     var nodeList = document.getElementsByClassName("pieChart");
     var bubble = null;
     for (var i = nodeList.length - 1; i >= 0; --i) {
@@ -222,22 +256,22 @@ function moveChartUp(promotedChartDiv) {
             swapContainingDivs(bubble, node);
         }
     }
-}
+};
 
 /**
  * Set new series data directly on the chart instead of via chartOptions.
  * @param {Object} chartObject
  * @param {Object} chartData
  */
-function setNewChartData(chartObject, chartData) {
+var setNewChartData = function(chartObject, chartData) {
     chartObject.series[0].data.length = 0;
     chartObject.series[0].setData(chartData);
-}
+};
 
 /**
  * Set the new chart data and redraw.
  */
-function redrawNewData(chart, data) {
+var redrawNewData = function(chart, data) {
 
     // recover slice color mapping for chart
     var title = chart["options"]["title"]["text"];
@@ -257,12 +291,12 @@ function redrawNewData(chart, data) {
     // set new data for chart
     setNewChartData(chart, data);
     chart.redraw();
-}
+};
 
 /**
  * Get the color mapping from a chart.
  */
-function extractColorMapping(chart) {
+var extractColorMapping = function(chart) {
     var mapping = {};
     var data = chart.series[0]["options"]["data"];
     var colors = chart["options"]["colors"];
@@ -273,12 +307,12 @@ function extractColorMapping(chart) {
         mapping[name] = color;
     }
     return mapping;
-}
+};
 
 /**
  * Redraw pie charts using the current selectionCriteria object.
  */
-function redrawCharts() {
+var redrawCharts = function() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
     var chartIds = getKeys(chartObjMapping);
@@ -290,23 +324,23 @@ function redrawCharts() {
     }
 
     updateChartCrumbs(selectionCriteria);
-}
+};
 
 /**
  * Create a pie chart with the specified parameters.
  */
-function initializeChart(containingDivId, title, dataFeature, selectedIds) {
+var initializeChart = function(containingDivId, title, dataFeature, selectedIds) {
     var data = cohort.getPatientCounts(selectedIds, dataFeature);
     var chartOptions = pieChartOptionsTemplate;
 
     setupChartOptions(containingDivId, dataFeature, data, title, chartOptions);
     return new Highcharts.Chart(chartOptions);
-}
+};
 
 /**
  * initial drawing of charts
  */
-function initializeCharts(chartIdList) {
+var initializeCharts = function(chartIdList) {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
     // map chartId to chartObject
@@ -320,45 +354,14 @@ function initializeCharts(chartIdList) {
     updateChartCrumbs(selectionCriteria);
 
     return chartMapping;
-}
+};
 
-var chartObjMapping = {};
-
-var sliceColorMapping = {};
-
-var selectionCriteria = new selectionCriteria();
-var cohort = null;
-
-function getDatatypeData(url) {
-    var response = getResponse(datatypeUrl);
-    if (response == null) {
-        return new Object();
-    }
-    var parsedResponse = parseJson(response);
-    var contents = parsedResponse["contents"];
-    var datatypeData = $.csv.toObjects(contents, {
-        'separator' : '\t'
-    });
-    var datatypesObj = new Object();
-    for (var i in datatypeData) {
-        var row = datatypeData[i];
-        var id = row["Sample"];
-        var datatypes = new Array();
-        for (var feature in row) {
-            var value = row[feature];
-            if (feature.trim() != "" && feature.trim() != "id" && feature.trim() != "Sample" && value != null && value.trim() != "") {
-                datatypes.push(feature.trim());
-            }
-        }
-        if (datatypes.length >= 1) {
-            datatypesObj[id] = new Object();
-            datatypesObj[id]["datatypes"] = datatypes;
-        }
-    }
-    return datatypesObj;
-}
-
-setupDiv = function(containerDivId, chartNames) {
+/**
+ *Setup the divs for containing the chart objects
+ * @param {Object} containerDivId
+ * @param {Object} chartNames
+ */
+var setupDiv = function(containerDivId, chartNames) {
     var parentDivElem = document.getElementById(containerDivId);
 
     parentDivElem.appendChild(createDivElement('chartCrumbsDiv'));
@@ -371,6 +374,10 @@ setupDiv = function(containerDivId, chartNames) {
     }
 };
 
+/**
+ * draw charts as specified in config.
+ * @param {Object} config
+ */
 pie_charts = function(config) {
     cohort = setCohortData(config['dataUrl']);
 
