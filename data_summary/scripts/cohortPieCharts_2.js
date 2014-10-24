@@ -11,11 +11,10 @@
  * 2) static.js
  * 3) OD_eventData.js
  * 4) jquery-csv
- */
+ **/
 
 var dataUrl = "data_summary/data/cohort2_20140922.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
-var tissueCollectionUrl = "data_summary/data/tissue_collection.tsv";
 
 /**
  * get the JSON data to create a cohortData object.
@@ -282,17 +281,13 @@ function extractColorMapping(chart) {
 function redrawCharts() {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    redrawNewData(studySiteChart, cohort.getPatientCounts(selectedIds, 'studysite'));
-    redrawNewData(biopsySiteChart, cohort.getPatientCounts(selectedIds, 'biopsysite'));
-    redrawNewData(subsequentDrugsChart, cohort.getPatientCounts(selectedIds, 'subsequentdrugs'));
-    // redrawNewData(treatmentDetailsChart, cohort.getPatientCounts(selectedIds, 'treatmentdetails'));
-    redrawNewData(ctcChart, cohort.getPatientCounts(selectedIds, 'ctc'));
-    redrawNewData(acghChart, cohort.getPatientCounts(selectedIds, 'acgh'));
-    redrawNewData(rnaseqChart, cohort.getPatientCounts(selectedIds, 'rnaseq'));
-    redrawNewData(fishChart, cohort.getPatientCounts(selectedIds, 'ar_fish'));
-    redrawNewData(ptenIhcChart, cohort.getPatientCounts(selectedIds, 'pten_ihc'));
-    redrawNewData(mutationPanelChart, cohort.getPatientCounts(selectedIds, 'mutation_panel'));
-    // redrawNewData(rnaMutationChart, cohort.getPatientCounts(selectedIds, 'rna-mutation call'));
+    var chartIds = getKeys(chartObjMapping);
+    for (var i = 0; i < chartIds.length; i++) {
+        var chartId = chartIds[i];
+        var chartObj = chartObjMapping[chartId];
+
+        redrawNewData(chartObj, cohort.getPatientCounts(selectedIds, chartId));
+    }
 
     updateChartCrumbs(selectionCriteria);
 }
@@ -311,39 +306,23 @@ function initializeChart(containingDivId, title, dataFeature, selectedIds) {
 /**
  * initial drawing of charts
  */
-function initializeCharts() {
+function initializeCharts(chartIdList) {
     var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
 
-    studySiteChart = initializeChart("chart1", "Study Site", 'studySite', selectedIds);
-    biopsySiteChart = initializeChart("chart2", "Biopsy Site", 'biopsySite', selectedIds);
-    subsequentDrugsChart = initializeChart("chart3", "On-Study Drugs", 'subsequentDrugs', selectedIds);
-
-    // treatmentDetailsChart = initializeChart("chart4", "Treatment Details", 'treatmentDetails', selectedIds);
-    mutationPanelChart = initializeChart("chart4", "Mutation Panel Data", 'mutation_panel', selectedIds);
-    ctcChart = initializeChart("chart5", "CTC Data", 'ctc', selectedIds);
-    acghChart = initializeChart("chart6", "aCGH Data", 'acgh', selectedIds);
-
-    rnaseqChart = initializeChart("chart7", "RNAseq Data", 'rnaseq', selectedIds);
-    fishChart = initializeChart("chart8", "FISH Data", 'ar_fish', selectedIds);
-    ptenIhcChart = initializeChart("chart9", "PTEN_IHC Data", 'pten_ihc', selectedIds);
-
-    // mutationPanelChart = initializeChart("chart10", "Mutation Panel Data", 'mutation_panel', selectedIds);
-    // rnaMutationChart = initializeChart("chart11", "RNA-mutation call Data", 'rna-mutation call', selectedIds);
+    // map chartId to chartObject
+    var chartMapping = {};
+    for (var i = 0; i < chartIdList.length; i++) {
+        var chartId = chartIdList[i];
+        var containingDivId = 'chart' + (i + 1);
+        chartMapping[chartId] = initializeChart(containingDivId, chartId, chartId, selectedIds);
+    }
 
     updateChartCrumbs(selectionCriteria);
+
+    return chartMapping;
 }
 
-var studySiteChart = null;
-var biopsySiteChart = null;
-var subsequentDrugsChart = null;
-// var treatmentDetailsChart = null;
-var ctcChart = null;
-var acghChart = null;
-var rnaseqChart = null;
-var fishChart = null;
-var ptenIhcChart = null;
-var mutationPanelChart = null;
-// var rnaMutationChart = null;
+var chartObjMapping = {};
 
 var sliceColorMapping = {};
 
@@ -379,289 +358,25 @@ function getDatatypeData(url) {
     return datatypesObj;
 }
 
-function tissueCollectionChart(url) {
-    var response = getResponse(url);
-    var rows = $.csv.toObjects(response, {
-        'separator' : '\t'
-    });
+setupDiv = function(containerDivId, chartNames) {
+    var parentDivElem = document.getElementById(containerDivId);
 
-    var data = {};
-    var locationCounts = {};
-    var seriesObjects = {};
-    var series = [];
-    for (var i = 0; i < rows.length; i++) {
-        var sampleData = rows[i];
-        var date = sampleData['Biopsy Date'];
-        var location = sampleData['Biopsy Location'];
-        if ( date in data) {
-        } else {
-            data[date] = [];
-        }
+    parentDivElem.appendChild(createDivElement('chartCrumbsDiv'));
 
-        if ( location in locationCounts) {
-
-        } else {
-            locationCounts[location] = 0;
-            seriesObjects[location] = {
-                'name' : location,
-                'data' : []
-            };
-            series.push(seriesObjects[location]);
-
-        }
-        data[date].push(location);
+    for (var i = 0; i < chartNames.length; i++) {
+        var containerDivElem = createDivElement('chart' + (i + 1) + '_container', 'pieChartContainer');
+        var chartDivElem = createDivElement('chart' + (i + 1), 'pieChart');
+        parentDivElem.appendChild(containerDivElem);
+        containerDivElem.appendChild(chartDivElem);
     }
+};
 
-    // console.log(prettyJson(data));
-    // console.log(seriesObjects);
-    // console.log(locationCounts);
+pie_charts = function(config) {
+    cohort = setCohortData(config['dataUrl']);
 
-    var dates = Object.keys(data);
-    // sort by increasing date
-    dates.sort(function(a, b) {
-        a = new Date(a);
-        b = new Date(b);
-        return a > b ? 1 : a < b ? -1 : 0;
-    });
+    var chartNames = ['studySite', 'biopsySite', 'subsequentDrugs', 'mutation_panel', 'ctc', 'acgh', 'rnaseq', 'ar_fish', 'pten_ihc'];
 
-    // console.log(dates);
+    setupDiv(config['containerDiv'], chartNames);
 
-    // console.log(series);
-
-    var currMonthYear = null;
-    for (var i = 0; i < dates.length; i++) {
-        var date = dates[i];
-
-        var d = date.split("/");
-        var year = '20' + d[2];
-        var month = d[0] - 1;
-        var day = d[1] - 1;
-
-        if (currMonthYear == null) {
-            // set initial status
-            currMonthYear = month + "/" + year;
-        }
-
-        if ((currMonthYear !== month + "/" + year) || (i == dates.length - 1)) {
-            // save data points
-            for (var location in locationCounts) {
-                var pointDate = currMonthYear.split("/");
-                var pointData = [Date.UTC(pointDate[1], pointDate[0]), locationCounts[location]];
-                seriesObjects[location]['data'].push(pointData);
-            }
-
-            if ((currMonthYear !== month + "/" + year) && (i == dates.length - 1)) {
-                // increment counters for last data point
-                var locationList = data[date];
-
-                for (var j = 0; j < locationList.length; j++) {
-                    var location = locationList[j];
-                    locationCounts[location]++;
-                }
-
-                // save data points
-                for (var location in locationCounts) {
-                    var pointData = [Date.UTC(year, month), locationCounts[location]];
-                    seriesObjects[location]['data'].push(pointData);
-                }
-            }
-        }
-        // increment counters
-        var locationList = data[date];
-
-        for (var j = 0; j < locationList.length; j++) {
-            var location = locationList[j];
-            locationCounts[location]++;
-        }
-
-        currMonthYear = month + "/" + year;
-        // console.log(d, prettyJson(locationCounts));
-    }
-
-    // console.log((series));
-
-    $('#chart_test2').highcharts({
-        credits : {
-            enabled : false
-        },
-        chart : {
-            // type : 'spline',
-            type : 'column',
-        },
-        title : {
-            text : 'Tissue of Biopsy Samples Collected'
-        },
-
-        // subtitle : {
-        // text : 'Irregular time data in Highcharts JS'
-        // },
-
-        xAxis : {
-            type : 'datetime',
-
-            // dateTimeLabelFormats : {// don't display the dummy year
-            // month : '%e. %b',
-            // year : '%b'
-            // }
-
-        },
-        yAxis : {
-            title : {
-                text : 'total samples collected'
-            },
-            min : 0,
-            stackLabels : {
-                enabled : true,
-                style : {
-                    fontWeight : 'bold',
-                    color : (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        },
-        tooltip : {
-            formatter : function() {
-                return this.y + ' total <b>' + this.series.name + '</b> samples collected<br/>' + Highcharts.dateFormat('%m-%Y', this.x);
-            }
-        },
-        plotOptions : {
-            column : {
-                stacking : 'normal',
-                dataLabels : {
-                    enabled : false,
-                    color : (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style : {
-                        textShadow : '0 0 3px black, 0 0 3px black'
-                    }
-                }
-            }
-        },
-        'series' : series
-    });
-
-}
-
-function test_chart(url) {
-    var response = getResponse(url);
-    var rows = $.csv.toObjects(response, {
-        'separator' : '\t'
-    });
-
-    var data = {};
-    for (var i = 0; i < rows.length; i++) {
-        var sampleData = rows[i];
-        var date = sampleData['Biopsy Date'];
-        var id = sampleData['Subject ID'];
-        if ( date in data) {
-        } else {
-            data[date] = [];
-        }
-        data[date].push(id);
-    }
-
-    var dates = Object.keys(data);
-    // sort by increasing date
-    dates.sort(function(a, b) {
-        a = new Date(a);
-        b = new Date(b);
-        return a > b ? 1 : a < b ? -1 : 0;
-    });
-    var series = [];
-
-    var series_total = {
-        "name" : "biopsies collected",
-        'data' : []
-    };
-
-    var locationData = {};
-
-    series.push(series_total);
-    // series.push(series_location);
-
-    var total = 0;
-    for (var i = 0; i < dates.length; i++) {
-        var date = dates[i];
-
-        var d = date.split("/");
-        var year = '20' + d[2];
-        var month = d[0] - 1;
-        var day = d[1] - 1;
-
-        var numSamples = data[date].length;
-        total += numSamples;
-        // var pointData = [date, numSamples];
-        var pointData = [Date.UTC(year, month), total];
-        series_total['data'].push(pointData);
-    }
-
-    // console.log(prettyJson(series));
-
-    $('#chart_test').highcharts({
-        credits : {
-            enabled : false
-        },
-        chart : {
-            // type : 'spline',
-            type : 'column',
-        },
-        title : {
-            text : 'Biopsy Samples Collected'
-        },
-
-        // subtitle : {
-        // text : 'Irregular time data in Highcharts JS'
-        // },
-
-        xAxis : {
-            type : 'datetime',
-
-            // dateTimeLabelFormats : {// don't display the dummy year
-            // month : '%e. %b',
-            // year : '%b'
-            // }
-
-        },
-        yAxis : {
-            title : {
-                text : 'samples collected'
-            },
-            min : 0
-        },
-        tooltip : {
-            formatter : function() {
-                return '<b>' + this.series.name + '</b><br/>' + this.y + ' total samples collected<br/>' + Highcharts.dateFormat('%Y-%m', this.x);
-            }
-        },
-
-        // plotOptions : {
-        // column : {
-        // stacking : 'normal',
-        // dataLabels : {
-        // enabled : true,
-        // color : (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-        // style : {
-        // textShadow : '0 0 3px black, 0 0 3px black'
-        // }
-        // }
-        // }
-        // },
-
-        'series' : series
-    });
-
-}
-
-// TODO onload
-window.onload = function() {
-
-    // selectionCriteria.addCriteria("studySite", "Mt. Zion");
-    // selectionCriteria.addCriteria("biopsySite", "Bone");
-
-    // selectionCriteria.clearCriteria();
-
-    cohort = setCohortData(dataUrl);
-
-    initializeCharts();
-
-    test_chart(tissueCollectionUrl);
-    tissueCollectionChart(tissueCollectionUrl);
+    chartObjMapping = initializeCharts(chartNames);
 };

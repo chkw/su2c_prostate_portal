@@ -133,46 +133,48 @@
 				Put some charts/tables about the release here.  On our <a href="http://dcc.icgc.org/" target="icgc_portal">benchmark site</a>, nearly every chart and table is a search control.
 				</p> -->
 				<div id="chartCrumbs"></div>
-				<div id="chart1_container" class="pieChartContainer">
+				<div id='pie_charts'>
+					<!-- <div id="chart1_container" class="pieChartContainer">
 					<div id="chart1" class="pieChart"></div>
-				</div>
-				<div id="chart2_container" class="pieChartContainer">
+					</div>
+					<div id="chart2_container" class="pieChartContainer">
 					<div id="chart2" class="pieChart"></div>
-				</div>
-				<div id="chart3_container" class="pieChartContainer">
+					</div>
+					<div id="chart3_container" class="pieChartContainer">
 					<div id="chart3" class="pieChart"></div>
-				</div>
-				<br>
-				<div id="chart4_container" class="pieChartContainer">
+					</div>
+					<br>
+					<div id="chart4_container" class="pieChartContainer">
 					<div id="chart4" class="pieChart"></div>
-				</div>
-				<div id="chart5_container" class="pieChartContainer">
+					</div>
+					<div id="chart5_container" class="pieChartContainer">
 					<div id="chart5" class="pieChart"></div>
-				</div>
-				<div id="chart6_container" class="pieChartContainer">
+					</div>
+					<div id="chart6_container" class="pieChartContainer">
 					<div id="chart6" class="pieChart"></div>
-				</div>
-				<br>
-				<div id="chart7_container" class="pieChartContainer">
+					</div>
+					<br>
+					<div id="chart7_container" class="pieChartContainer">
 					<div id="chart7" class="pieChart"></div>
-				</div>
-				<div id="chart8_container" class="pieChartContainer">
+					</div>
+					<div id="chart8_container" class="pieChartContainer">
 					<div id="chart8" class="pieChart"></div>
-				</div>
-				<div id="chart9_container" class="pieChartContainer">
+					</div>
+					<div id="chart9_container" class="pieChartContainer">
 					<div id="chart9" class="pieChart"></div>
-				</div>
-				<br>
-				<div id="chart10_container" class="pieChartContainer">
+					</div>
+					<br>
+					<div id="chart10_container" class="pieChartContainer">
 					<div id="chart10" class="pieChart"></div>
-				</div>
-				<div id="chart11_container" class="pieChartContainer">
+					</div>
+					<div id="chart11_container" class="pieChartContainer">
 					<div id="chart11" class="pieChart"></div>
-				</div>
-				<div id="chart12_container" class="pieChartContainer">
+					</div>
+					<div id="chart12_container" class="pieChartContainer">
 					<div id="chart12" class="pieChart"></div>
+					</div>
+					<br> -->
 				</div>
-				<br>
 			</article>
 		</div>
 		<footer class="footer">
@@ -208,5 +210,13 @@
                 }WriteTodaysDate();
 			</script>
 		</footer>
+		<script>
+            window.onload = function() {
+                pie_charts({
+                    'dataUrl' : dataUrl,
+                    'containerDiv' : 'pie_charts'
+                });
+            };
+		</script>
 	</body>
 </html>
