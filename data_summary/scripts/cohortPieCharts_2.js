@@ -384,7 +384,7 @@ pie_charts = function(config) {
 
     var chartNames = ['studySite', 'biopsySite', 'subsequentDrugs', 'mutation_panel', 'ctc', 'acgh', 'rnaseq', 'ar_fish', 'pten_ihc'];
 
-    setupDiv(config['containerDiv'], chartNames);
+    setupDiv(config['containerDivId'], chartNames);
 
     chartObjMapping = initializeCharts(chartNames);
 };
