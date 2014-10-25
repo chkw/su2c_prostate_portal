@@ -24,7 +24,10 @@
 
 		<script type="text/javascript" src="data_summary/scripts/jquery.csv-0.71.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="data_summary/scripts/static.js"></script>
-		<script type="text/javascript" src="data_summary/scripts/cohortData.js"></script>
+		<!-- <script type="text/javascript" src="data_summary/scripts/cohortData.js"></script> -->
+		<script type="text/javascript" src="data_summary/scripts/OD_eventData.js"></script>
+		<script type="text/javascript" src="data_summary/scripts/medbook_data_load.js"></script>
+		<script type="text/javascript" src="data_summary/scripts/a.js"></script>
 		<script type="text/javascript" src="data_summary/scripts/cohortPieCharts_2.js"></script>
 
 	</head>
@@ -152,6 +155,9 @@
                 pie_charts({
                     'containerDivId' : 'pie_charts',
                     'dataUrl' : dataUrl,
+                    'mongoData' : {
+                        'clinical' : aaa
+                    }
                 });
             };
 		</script>

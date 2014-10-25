@@ -18,8 +18,48 @@ var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
 
 var chartObjMapping = {};
 var sliceColorMapping = {};
-var selectionCriteria = new selectionCriteria();
+var selectionCriteria = new sampleSelectionCriteria();
 var cohort = null;
+var config = {};
+
+var getConfiguration = function(conf) {
+    // look for od_config in cookies
+    var querySettings = parseJson(getCookie('od_config')) || {};
+    conf['querySettings'] = querySettings;
+
+    var OD_eventAlbum = null;
+    if ('eventAlbum' in conf) {
+        OD_eventAlbum = conf['eventAlbum'];
+    } else {
+        OD_eventAlbum = new OD_eventMetadataAlbum();
+        conf['eventAlbum'] = OD_eventAlbum;
+    }
+
+    if ('clinicalUrl' in conf) {
+        getClinicalData(conf['clinicalUrl'], OD_eventAlbum);
+    }
+
+    if ('expressionUrl' in conf) {
+        getExpressionData(conf['expressionUrl'], OD_eventAlbum);
+    }
+
+    if ('mutationUrl' in conf) {
+        getMutationData(conf['mutationUrl'], OD_eventAlbum);
+    }
+
+    if ('mongoData' in conf) {
+        var mongoData = conf['mongoData'];
+        if ('clinical' in mongoData) {
+            mongoClinicalData(mongoData['clinical'], OD_eventAlbum);
+        }
+
+        if ('expression' in mongoData) {
+            mongoExpressionData(mongoData['expression'], OD_eventAlbum);
+        }
+    }
+
+    return conf;
+};
 
 /**
  * get the JSON data to create a cohortData object.
@@ -124,9 +164,9 @@ var plotOptions = {
             events : {
                 // click pie slice to add sample selection criteria & redraw charts
                 click : function() {
-                    var feature = this.series.name;
+                    var eventId = this.series.name;
                     var value = this.name;
-                    selectionCriteria.addCriteria(feature, value);
+                    selectionCriteria.addCriteria(eventId, value);
                     redrawCharts();
                 }
             }
@@ -212,14 +252,14 @@ var setupChartOptions = function(renderTo, seriesName, seriesData, title, chartO
 /**
  * Create a button element to remove a filter from selectionCriteria.
  */
-var createCrumbButton = function(feature, value) {
-    var innerHtml = feature + "<br>" + value;
+var createCrumbButton = function(eventId, value) {
+    var innerHtml = eventId + "<br>" + value;
     var buttonElement = $("<button class='crumbButton'>" + innerHtml + "</button>").hover(function() {
         this.innerHTML = "<s>" + innerHtml + "</s>";
     }, function() {
         this.innerHTML = innerHtml;
     }).click(function() {
-        selectionCriteria.removeCriteria(feature, value);
+        selectionCriteria.removeCriteria(eventId, value);
         redrawCharts();
     });
     return buttonElement;
@@ -234,9 +274,9 @@ var updateChartCrumbs = function(selectionCriteria) {
     e.innerHTML = "applied filters: ";
     var criteria = selectionCriteria.getCriteria();
     for (var i in criteria) {
-        var feature = criteria[i]["feature"];
+        var eventId = criteria[i]["eventId"];
         var value = criteria[i]["value"];
-        createCrumbButton(feature, value).appendTo(e);
+        createCrumbButton(eventId, value).appendTo(e);
     }
 };
 
@@ -313,24 +353,42 @@ var extractColorMapping = function(chart) {
  * Redraw pie charts using the current selectionCriteria object.
  */
 var redrawCharts = function() {
-    var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
+    var selectedIds = cohort.selectSamples(selectionCriteria.getCriteria());
 
     var chartIds = getKeys(chartObjMapping);
     for (var i = 0; i < chartIds.length; i++) {
         var chartId = chartIds[i];
         var chartObj = chartObjMapping[chartId];
 
-        redrawNewData(chartObj, cohort.getPatientCounts(selectedIds, chartId));
+        var counts = cohort.getEvent(chartId).data.getValueCounts(selectedIds);
+        var data = countsToPieData(counts);
+
+        redrawNewData(chartObj, data);
     }
 
     updateChartCrumbs(selectionCriteria);
 };
 
 /**
+ * Get series data for pie chart from category counts.
+ */
+var countsToPieData = function(counts) {
+    var data = new Array();
+    for (var type in counts) {
+        var typeData = new Object();
+        data.push(typeData);
+        typeData["name"] = type;
+        typeData["y"] = counts[type];
+    }
+    return data;
+};
+
+/**
  * Create a pie chart with the specified parameters.
  */
 var initializeChart = function(containingDivId, title, dataFeature, selectedIds) {
-    var data = cohort.getPatientCounts(selectedIds, dataFeature);
+    var counts = cohort.getEvent(dataFeature).data.getValueCounts(selectedIds);
+    var data = countsToPieData(counts);
     var chartOptions = pieChartOptionsTemplate;
 
     setupChartOptions(containingDivId, dataFeature, data, title, chartOptions);
@@ -341,7 +399,7 @@ var initializeChart = function(containingDivId, title, dataFeature, selectedIds)
  * initial drawing of charts
  */
 var initializeCharts = function(chartIdList) {
-    var selectedIds = cohort.selectIds(selectionCriteria.getCriteria());
+    var selectedIds = cohort.selectSamples(selectionCriteria.getCriteria());
 
     // map chartId to chartObject
     var chartMapping = {};
@@ -380,9 +438,14 @@ var setupDiv = function(containerDivId, chartNames) {
  * @param {Object} config
  */
 pie_charts = function(config) {
-    cohort = setCohortData(config['dataUrl']);
+    // cohort = setCohortData(config['dataUrl']);
+    config = getConfiguration(config);
 
-    var chartNames = ['studySite', 'biopsySite', 'subsequentDrugs', 'mutation_panel', 'ctc', 'acgh', 'rnaseq', 'ar_fish', 'pten_ihc'];
+    cohort = config['eventAlbum'];
+
+    var chartNames = cohort.getEventIdsByType()['clinical data'];
+
+    // var chartNames = ['studySite', 'biopsySite', 'subsequentDrugs', 'mutation_panel', 'ctc', 'acgh', 'rnaseq', 'ar_fish', 'pten_ihc'];
 
     setupDiv(config['containerDivId'], chartNames);
 
