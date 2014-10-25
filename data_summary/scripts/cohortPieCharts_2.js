@@ -166,7 +166,11 @@ var plotOptions = {
                 click : function() {
                     var eventId = this.series.name;
                     var value = this.name;
+                    if (value === 'null ') {
+                        value = null;
+                    }
                     selectionCriteria.addCriteria(eventId, value);
+                    console.log(prettyJson(selectionCriteria));
                     redrawCharts();
                 }
             }
@@ -374,11 +378,18 @@ var redrawCharts = function() {
  */
 var countsToPieData = function(counts) {
     var data = new Array();
-    for (var type in counts) {
+    var types = getKeys(counts);
+    for (var i = 0; i < types.length; i++) {
+        var type = types[i];
+        var count = counts[type];
         var typeData = new Object();
         data.push(typeData);
+        if (type === 'null') {
+            console.log('got a null');
+            type = 'null ';
+        }
         typeData["name"] = type;
-        typeData["y"] = counts[type];
+        typeData["y"] = count;
     }
     return data;
 };
