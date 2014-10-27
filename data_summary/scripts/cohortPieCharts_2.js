@@ -49,7 +49,11 @@ var getConfiguration = function(conf) {
     if ('mongoData' in conf) {
         var mongoData = conf['mongoData'];
         if ('clinical' in mongoData) {
-            mongoClinicalData(mongoData['clinical'], OD_eventAlbum);
+            if (mongoData['clinical'] === 'aaa') {
+                mongoClinicalData(aaa, OD_eventAlbum);
+            } else {
+                mongoClinicalData(mongoData['clinical'], OD_eventAlbum);
+            }
         }
 
         if ('expression' in mongoData) {
@@ -422,28 +426,28 @@ var initializeCharts = function(chartIdList) {
 
 /**
  *Setup the divs for containing the chart objects
- * @param {Object} containerDivId
+ * @param {Object} outerContainerElem
  * @param {Object} chartNames
  */
-var setupDiv = function(containerDivId, chartNames) {
-    var parentDivElem = document.getElementById(containerDivId);
-    removeChildElems(parentDivElem);
+var setupDiv = function(outerContainerElem, chartNames) {
+    removeChildElems(outerContainerElem);
 
-    parentDivElem.appendChild(createDivElement('chartCrumbs'));
+    outerContainerElem.appendChild(createDivElement('chartCrumbs'));
 
     for (var i = 0; i < chartNames.length; i++) {
         var containerDivElem = createDivElement('chart' + (i + 1) + '_container', 'pieChartContainer');
         var chartDivElem = createDivElement('chart' + (i + 1), 'pieChart');
-        parentDivElem.appendChild(containerDivElem);
+        outerContainerElem.appendChild(containerDivElem);
         containerDivElem.appendChild(chartDivElem);
     }
 };
 
 /**
  * draw charts as specified in config.
+ * @param {Object} containerElem
  * @param {Object} config
  */
-pie_charts = function(config) {
+pie_charts = function(containerElem, config) {
     config = getConfiguration(config);
 
     cohort = config['eventAlbum'];
@@ -452,7 +456,7 @@ pie_charts = function(config) {
 
     // var chartNames = ['studySite', 'biopsySite', 'subsequentDrugs', 'mutation_panel', 'ctc', 'acgh', 'rnaseq', 'ar_fish', 'pten_ihc'];
 
-    setupDiv(config['containerDivId'], chartNames);
+    setupDiv(containerElem, chartNames);
 
     chartObjMapping = initializeCharts(chartNames);
 };

@@ -145,11 +145,12 @@
 		</footer>
 		<script>
             window.onload = function() {
-                pie_charts({
-                    'containerDivId' : 'pie_charts',
-                    'dataUrl' : dataUrl,
+                var containerElem = document.getElementById('pie_charts');
+                pie_charts(containerElem, {
+                    // 'containerDivId' : 'pie_charts',
+                    // 'dataUrl' : dataUrl,
                     'mongoData' : {
-                        'clinical' : aaa
+                        'clinical' : 'aaa'
                     }
                 });
             };
