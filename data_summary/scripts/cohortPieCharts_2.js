@@ -7,10 +7,9 @@
  * This version will get the pie slice counts from OD_eventData objects.
  *
  * * requirements:
- * 1) HighCharts (3.0.9)
+ * 1) HighCharts (3.0.9): If no jQuery, then must use highcharts-all.js, the framework package.
  * 2) static.js
  * 3) OD_eventData.js
- * 4) jquery-csv
  **/
 
 var dataUrl = "data_summary/data/cohort2_20140922.json";
@@ -61,58 +60,34 @@ var getConfiguration = function(conf) {
     return conf;
 };
 
-/**
- * get the JSON data to create a cohortData object.
- */
-var setCohortData = function(url) {
-    var response = getResponse(url);
-
-    var parsedResponse = parseJson(response);
-    var contents = parseJson(parsedResponse["contents"]);
-
-    var cohort = new cohortData(contents);
-
-    var ids = cohort.getAllPatientIds();
-    var datatypeData = getDatatypeData(datatypeUrl);
-    for (var i in ids) {
-        var id = ids[i];
-        if ( id in datatypeData) {
-            var patient = cohort.getPatient(id);
-            patient["data"]["datatypes"] = datatypeData[id]["datatypes"];
-        }
-    }
-
-    return cohort;
-};
-
-var getDatatypeData = function(url) {
-    var response = getResponse(datatypeUrl);
-    if (response == null) {
-        return new Object();
-    }
-    var parsedResponse = parseJson(response);
-    var contents = parsedResponse["contents"];
-    var datatypeData = $.csv.toObjects(contents, {
-        'separator' : '\t'
-    });
-    var datatypesObj = new Object();
-    for (var i in datatypeData) {
-        var row = datatypeData[i];
-        var id = row["Sample"];
-        var datatypes = new Array();
-        for (var feature in row) {
-            var value = row[feature];
-            if (feature.trim() != "" && feature.trim() != "id" && feature.trim() != "Sample" && value != null && value.trim() != "") {
-                datatypes.push(feature.trim());
-            }
-        }
-        if (datatypes.length >= 1) {
-            datatypesObj[id] = new Object();
-            datatypesObj[id]["datatypes"] = datatypes;
-        }
-    }
-    return datatypesObj;
-};
+// var getDatatypeData = function(url) {
+// var response = getResponse(datatypeUrl);
+// if (response == null) {
+// return new Object();
+// }
+// var parsedResponse = parseJson(response);
+// var contents = parsedResponse["contents"];
+// var datatypeData = $.csv.toObjects(contents, {
+// 'separator' : '\t'
+// });
+// var datatypesObj = new Object();
+// for (var i in datatypeData) {
+// var row = datatypeData[i];
+// var id = row["Sample"];
+// var datatypes = new Array();
+// for (var feature in row) {
+// var value = row[feature];
+// if (feature.trim() != "" && feature.trim() != "id" && feature.trim() != "Sample" && value != null && value.trim() != "") {
+// datatypes.push(feature.trim());
+// }
+// }
+// if (datatypes.length >= 1) {
+// datatypesObj[id] = new Object();
+// datatypesObj[id]["datatypes"] = datatypes;
+// }
+// }
+// return datatypesObj;
+// };
 
 Highcharts.setOptions({
     chart : {
@@ -170,7 +145,6 @@ var plotOptions = {
                         value = null;
                     }
                     selectionCriteria.addCriteria(eventId, value);
-                    console.log(prettyJson(selectionCriteria));
                     redrawCharts();
                 }
             }
@@ -258,16 +232,37 @@ var setupChartOptions = function(renderTo, seriesName, seriesData, title, chartO
  */
 var createCrumbButton = function(eventId, value) {
     var innerHtml = eventId + "<br>" + value;
-    var buttonElement = $("<button class='crumbButton'>" + innerHtml + "</button>").hover(function() {
+
+    var buttonElement = document.createElement('button');
+    buttonElement.innerHTML = innerHtml;
+    buttonElement.onmouseover = function(e) {
         this.innerHTML = "<s>" + innerHtml + "</s>";
-    }, function() {
+    };
+    buttonElement.onmouseout = function(e) {
         this.innerHTML = innerHtml;
-    }).click(function() {
+    };
+    buttonElement.onclick = function(e) {
         selectionCriteria.removeCriteria(eventId, value);
         redrawCharts();
-    });
+    };
     return buttonElement;
 };
+
+// /**
+// * Create a button element to remove a filter from selectionCriteria.
+// */
+// var createCrumbButton_old = function(eventId, value) {
+// var innerHtml = eventId + "<br>" + value;
+// var buttonElement = $("<button class='crumbButton'>" + innerHtml + "</button>").hover(function() {
+// this.innerHTML = "<s>" + innerHtml + "</s>";
+// }, function() {
+// this.innerHTML = innerHtml;
+// }).click(function() {
+// selectionCriteria.removeCriteria(eventId, value);
+// redrawCharts();
+// });
+// return buttonElement;
+// };
 
 /**
  * Update the chart crumbs.
@@ -280,7 +275,8 @@ var updateChartCrumbs = function(selectionCriteria) {
     for (var i in criteria) {
         var eventId = criteria[i]["eventId"];
         var value = criteria[i]["value"];
-        createCrumbButton(eventId, value).appendTo(e);
+        var button = createCrumbButton(eventId, value);
+        e.appendChild(button);
     }
 };
 
@@ -448,7 +444,6 @@ var setupDiv = function(containerDivId, chartNames) {
  * @param {Object} config
  */
 pie_charts = function(config) {
-    // cohort = setCohortData(config['dataUrl']);
     config = getConfiguration(config);
 
     cohort = config['eventAlbum'];
