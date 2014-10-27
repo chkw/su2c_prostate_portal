@@ -206,7 +206,7 @@ var pieChartOptionsTemplate = {
         name : null,
         data : null,
         showInLegend : true
-    }],
+    }]
 };
 
 /**
@@ -385,7 +385,6 @@ var countsToPieData = function(counts) {
         var typeData = new Object();
         data.push(typeData);
         if (type === 'null') {
-            console.log('got a null');
             type = 'null ';
         }
         typeData["name"] = type;
