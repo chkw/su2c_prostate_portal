@@ -26,38 +26,38 @@ var getConfiguration = function(conf) {
     var querySettings = parseJson(getCookie('od_config')) || {};
     conf['querySettings'] = querySettings;
 
-    var OD_eventAlbum = null;
+    var od_eventAlbum = null;
     if ('eventAlbum' in conf) {
-        OD_eventAlbum = conf['eventAlbum'];
+        od_eventAlbum = conf['eventAlbum'];
     } else {
-        OD_eventAlbum = new OD_eventMetadataAlbum();
-        conf['eventAlbum'] = OD_eventAlbum;
+        od_eventAlbum = new OD_eventAlbum();
+        conf['eventAlbum'] = od_eventAlbum;
     }
 
     if ('clinicalUrl' in conf) {
-        getClinicalData(conf['clinicalUrl'], OD_eventAlbum);
+        getClinicalData(conf['clinicalUrl'], od_eventAlbum);
     }
 
     if ('expressionUrl' in conf) {
-        getExpressionData(conf['expressionUrl'], OD_eventAlbum);
+        getExpressionData(conf['expressionUrl'], od_eventAlbum);
     }
 
     if ('mutationUrl' in conf) {
-        getMutationData(conf['mutationUrl'], OD_eventAlbum);
+        getMutationData(conf['mutationUrl'], od_eventAlbum);
     }
 
     if ('mongoData' in conf) {
         var mongoData = conf['mongoData'];
         if ('clinical' in mongoData) {
             if (mongoData['clinical'] === 'aaa') {
-                mongoClinicalData(aaa, OD_eventAlbum);
+                mongoClinicalData(aaa, od_eventAlbum);
             } else {
-                mongoClinicalData(mongoData['clinical'], OD_eventAlbum);
+                mongoClinicalData(mongoData['clinical'], od_eventAlbum);
             }
         }
 
         if ('expression' in mongoData) {
-            mongoExpressionData(mongoData['expression'], OD_eventAlbum);
+            mongoExpressionData(mongoData['expression'], od_eventAlbum);
         }
     }
 
