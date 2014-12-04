@@ -15,6 +15,7 @@
 var dataUrl = "data_summary/data/cohort2_20140922.json";
 var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
 
+// chardId:chartObject
 var chartObjMapping = {};
 var sliceColorMapping = {};
 var selectionCriteria = new sampleSelectionCriteria();
@@ -114,6 +115,38 @@ Highcharts.setOptions({
                 }).on("click", function() {
                     var chartDivElement = this.parentNode.parentNode.parentNode;
                     moveChartUp(chartDivElement);
+                }).add();
+
+                // clickable testing text
+                this.renderer.text("pie slice samples", 3, 22).attr({
+                    "cursor" : "pointer"
+                }).on("click", function() {
+                    var chartDivElemId = this.parentNode.parentNode.parentNode.id;
+
+                    var chartIndex = chartDivElemId.replace(/^chart/, '');
+
+                    var chartId = getKeys(chartObjMapping)[chartIndex - 1];
+
+                    console.log('chartId', chartId);
+
+                    // var number = containerDivId.replace(/_container$/, "").match(/\d+$/);
+                    // number = parseInt(number, 10);
+                    //
+                    // var title = chartDeck.getDeck()[number].getChart().options.title.text;
+                    //
+                    // var unfilteredIds = cohort.selectIds(selCrit);
+                    //
+                    // var ids = chartDeck.getVisiblePointsIds(title, unfilteredIds);
+                    // console.log("The", ids.length, "IDs from the visible pie slices from", title, "are", ids);
+                    //
+                    // var names = [];
+                    // for (var i = 0; i < ids.length; i++) {
+                    // var id = ids[i];
+                    // var name = cohort.getPatientVal(id, 'name');
+                    // names.push(name);
+                    // }
+                    // names = eliminateDuplicates(names);
+                    // console.log("The", names.length, "names from the visible pie slices from", title, "are", names);
                 }).add();
             }
         }
@@ -391,6 +424,41 @@ var countsToPieData = function(counts) {
         typeData["y"] = count;
     }
     return data;
+};
+
+var getVisiblePointsIds = function(chartObj, idListPool) {
+    if (chartObj == null) {
+        return [];
+    }
+
+    // find chart's visible points
+    var visiblePoints = [];
+    var seriesData = chartObj.series[0].data;
+    for (var i = 0; i < seriesData.length; i++) {
+        var point = seriesData[i];
+        if (point.visible) {
+            visiblePoints.push(point.name);
+        }
+    }
+
+    // find the IDs in the visible points
+    var ids = [];
+    for (var i = 0; i < visiblePoints.length; i++) {
+        var featureVal = visiblePoints[i];
+        // TODO get the samplesIds from each featureVal pie slice
+        var sc = new selectionCriteria().addCriteria(chartTitle, featureVal);
+        var selectedIds = cohort.selectIds(sc);
+        ids = ids.concat(selectedIds);
+    }
+
+    // visible IDs
+    ids = eliminateDuplicates(ids);
+    // add ID list pool
+    ids = ids.concat(idListPool);
+    // only IDs from both list
+    ids = keepReplicates(ids);
+
+    return ids;
 };
 
 /**
