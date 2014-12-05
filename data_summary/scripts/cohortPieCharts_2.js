@@ -125,11 +125,7 @@ Highcharts.setOptions({
                     var chartIndex = chartDivElemId.replace(/^chart/, '');
                     var chartId = getKeys(chartObjMapping)[chartIndex - 1];
 
-                    console.log('chartId', chartId);
-
                     var chartObj = chartObjMapping[chartId];
-                    console.log((chartObj));
-
                     var ids = getVisiblePointsIds(chartObj, cohort.selectSamples(selectionCriteria.getCriteria()));
                     console.log("The", ids.length, "IDs from the visible pie slices from", chartId, "are", ids);
                 }).add();
@@ -411,6 +407,9 @@ var countsToPieData = function(counts) {
     return data;
 };
 
+/**
+ * Get the sample IDs from the visible points of the chart, restricting to IDs also in idListPool.
+ */
 var getVisiblePointsIds = function(chartObj, idListPool) {
     if (chartObj == null) {
         return [];
@@ -419,16 +418,13 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
     var chartTitle = chartObj.series[0].name;
 
     // find chart's visible points
-    // TODO need to correct the handling of 'null ' point.name
     var visiblePoints = [];
     var seriesData = chartObj.series[0].data;
     for (var i = 0; i < seriesData.length; i++) {
         var point = seriesData[i];
-        console.log('-' + point.name + '-');
         if (point.visible) {
-            var pointName = point.name;
+            var pointName = (point.name === 'null ') ? null : point.name;
             visiblePoints.push(pointName);
-            console.log(pointName + ' is visible in ' + chartTitle);
         }
     }
 
@@ -444,13 +440,10 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
 
     // visible IDs
     ids = eliminateDuplicates(ids);
-    console.log('visible IDs in ' + chartTitle, ids.length);
     // add ID list pool
     ids = ids.concat(idListPool);
-    console.log('idListPool added', ids.length);
     // only IDs from both list
     ids = keepReplicates(ids);
-    console.log('replicates only', ids.length);
     return ids;
 };
 
