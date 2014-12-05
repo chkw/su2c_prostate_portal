@@ -122,31 +122,16 @@ Highcharts.setOptions({
                     "cursor" : "pointer"
                 }).on("click", function() {
                     var chartDivElemId = this.parentNode.parentNode.parentNode.id;
-
                     var chartIndex = chartDivElemId.replace(/^chart/, '');
-
                     var chartId = getKeys(chartObjMapping)[chartIndex - 1];
 
                     console.log('chartId', chartId);
 
-                    // var number = containerDivId.replace(/_container$/, "").match(/\d+$/);
-                    // number = parseInt(number, 10);
-                    //
-                    // var title = chartDeck.getDeck()[number].getChart().options.title.text;
-                    //
-                    // var unfilteredIds = cohort.selectIds(selCrit);
-                    //
-                    // var ids = chartDeck.getVisiblePointsIds(title, unfilteredIds);
-                    // console.log("The", ids.length, "IDs from the visible pie slices from", title, "are", ids);
-                    //
-                    // var names = [];
-                    // for (var i = 0; i < ids.length; i++) {
-                    // var id = ids[i];
-                    // var name = cohort.getPatientVal(id, 'name');
-                    // names.push(name);
-                    // }
-                    // names = eliminateDuplicates(names);
-                    // console.log("The", names.length, "names from the visible pie slices from", title, "are", names);
+                    var chartObj = chartObjMapping[chartId];
+                    console.log((chartObj));
+
+                    var ids = getVisiblePointsIds(chartObj, cohort.selectSamples(selectionCriteria.getCriteria()));
+                    console.log("The", ids.length, "IDs from the visible pie slices from", chartId, "are", ids);
                 }).add();
             }
         }
@@ -431,13 +416,19 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
         return [];
     }
 
+    var chartTitle = chartObj.series[0].name;
+
     // find chart's visible points
+    // TODO need to correct the handling of 'null ' point.name
     var visiblePoints = [];
     var seriesData = chartObj.series[0].data;
     for (var i = 0; i < seriesData.length; i++) {
         var point = seriesData[i];
+        console.log('-' + point.name + '-');
         if (point.visible) {
-            visiblePoints.push(point.name);
+            var pointName = point.name;
+            visiblePoints.push(pointName);
+            console.log(pointName + ' is visible in ' + chartTitle);
         }
     }
 
@@ -445,19 +436,21 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
     var ids = [];
     for (var i = 0; i < visiblePoints.length; i++) {
         var featureVal = visiblePoints[i];
-        // TODO get the samplesIds from each featureVal pie slice
-        var sc = new selectionCriteria().addCriteria(chartTitle, featureVal);
-        var selectedIds = cohort.selectIds(sc);
+        var sc = new sampleSelectionCriteria();
+        sc.addCriteria(chartTitle, featureVal);
+        var selectedIds = cohort.selectSamples(sc.getCriteria());
         ids = ids.concat(selectedIds);
     }
 
     // visible IDs
     ids = eliminateDuplicates(ids);
+    console.log('visible IDs in ' + chartTitle, ids.length);
     // add ID list pool
     ids = ids.concat(idListPool);
+    console.log('idListPool added', ids.length);
     // only IDs from both list
     ids = keepReplicates(ids);
-
+    console.log('replicates only', ids.length);
     return ids;
 };
 
