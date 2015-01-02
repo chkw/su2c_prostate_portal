@@ -24,7 +24,7 @@ var config = {};
 
 var getConfiguration = function(conf) {
     // look for od_config in cookies
-    var querySettings = parseJson(getCookie('od_config')) || {};
+    var querySettings = utils.parseJson(utils.getCookie('od_config')) || {};
     conf['querySettings'] = querySettings;
 
     var od_eventAlbum = null;
@@ -123,7 +123,7 @@ Highcharts.setOptions({
                 }).on("click", function() {
                     var chartDivElemId = this.parentNode.parentNode.parentNode.id;
                     var chartIndex = chartDivElemId.replace(/^chart/, '');
-                    var chartId = getKeys(chartObjMapping)[chartIndex - 1];
+                    var chartId = utils.getKeys(chartObjMapping)[chartIndex - 1];
 
                     var chartObj = chartObjMapping[chartId];
                     var ids = getVisiblePointsIds(chartObj, cohort.selectSamples(selectionCriteria.getCriteria()));
@@ -311,7 +311,7 @@ var moveChartUp = function(promotedChartDiv) {
             continue;
         }
         if (bubble != null) {
-            swapContainingDivs(bubble, node);
+            utils.swapContainingDivs(bubble, node);
         }
     }
 };
@@ -373,7 +373,7 @@ var extractColorMapping = function(chart) {
 var redrawCharts = function() {
     var selectedIds = cohort.selectSamples(selectionCriteria.getCriteria());
 
-    var chartIds = getKeys(chartObjMapping);
+    var chartIds = utils.getKeys(chartObjMapping);
     for (var i = 0; i < chartIds.length; i++) {
         var chartId = chartIds[i];
         var chartObj = chartObjMapping[chartId];
@@ -392,7 +392,7 @@ var redrawCharts = function() {
  */
 var countsToPieData = function(counts) {
     var data = new Array();
-    var types = getKeys(counts);
+    var types = utils.getKeys(counts);
     for (var i = 0; i < types.length; i++) {
         var type = types[i];
         var count = counts[type];
@@ -439,11 +439,11 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
     }
 
     // visible IDs
-    ids = eliminateDuplicates(ids);
+    ids = utils.eliminateDuplicates(ids);
     // add ID list pool
     ids = ids.concat(idListPool);
     // only IDs from both list
-    ids = keepReplicates(ids);
+    ids = utils.keepReplicates(ids);
     return ids;
 };
 
@@ -484,13 +484,13 @@ var initializeCharts = function(chartIdList) {
  * @param {Object} chartNames
  */
 var setupDiv = function(outerContainerElem, chartNames) {
-    removeChildElems(outerContainerElem);
+    utils.removeChildElems(outerContainerElem);
 
-    outerContainerElem.appendChild(createDivElement('chartCrumbs'));
+    outerContainerElem.appendChild(utils.createDivElement('chartCrumbs'));
 
     for (var i = 0; i < chartNames.length; i++) {
-        var containerDivElem = createDivElement('chart' + (i + 1) + '_container', 'pieChartContainer');
-        var chartDivElem = createDivElement('chart' + (i + 1), 'pieChart');
+        var containerDivElem = utils.createDivElement('chart' + (i + 1) + '_container', 'pieChartContainer');
+        var chartDivElem = utils.createDivElement('chart' + (i + 1), 'pieChart');
         outerContainerElem.appendChild(containerDivElem);
         containerDivElem.appendChild(chartDivElem);
     }
