@@ -35,30 +35,32 @@ var getConfiguration = function(conf) {
         conf['eventAlbum'] = od_eventAlbum;
     }
 
+    var dataLoader = medbookDataLoader;
+
     if ('clinicalUrl' in conf) {
-        getClinicalData(conf['clinicalUrl'], od_eventAlbum);
+        dataLoader.getClinicalData(conf['clinicalUrl'], od_eventAlbum);
     }
 
     if ('expressionUrl' in conf) {
-        getExpressionData(conf['expressionUrl'], od_eventAlbum);
+        dataLoader.getExpressionData(conf['expressionUrl'], od_eventAlbum);
     }
 
     if ('mutationUrl' in conf) {
-        getMutationData(conf['mutationUrl'], od_eventAlbum);
+        dataLoader.getMutationData(conf['mutationUrl'], od_eventAlbum);
     }
 
     if ('mongoData' in conf) {
         var mongoData = conf['mongoData'];
         if ('clinical' in mongoData) {
             if (mongoData['clinical'] === 'aaa') {
-                mongoClinicalData(aaa, od_eventAlbum);
+                dataLoader.mongoClinicalData(aaa, od_eventAlbum);
             } else {
-                mongoClinicalData(mongoData['clinical'], od_eventAlbum);
+                dataLoader.mongoClinicalData(mongoData['clinical'], od_eventAlbum);
             }
         }
 
         if ('expression' in mongoData) {
-            mongoExpressionData(mongoData['expression'], od_eventAlbum);
+            dataLoader.mongoExpressionData(mongoData['expression'], od_eventAlbum);
         }
     }
 
