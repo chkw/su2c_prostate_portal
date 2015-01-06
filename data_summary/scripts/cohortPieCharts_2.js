@@ -18,7 +18,7 @@ var datatypeUrl = "data_summary/data/WCDT_datatypes_20140922.tab";
 // chardId:chartObject
 var chartObjMapping = {};
 var sliceColorMapping = {};
-var selectionCriteria = new sampleSelectionCriteria();
+var selectionCriteria = new eventData.sampleSelectionCriteria();
 var cohort = null;
 var config = {};
 
@@ -31,7 +31,7 @@ var getConfiguration = function(conf) {
     if ('eventAlbum' in conf) {
         od_eventAlbum = conf['eventAlbum'];
     } else {
-        od_eventAlbum = new OD_eventAlbum();
+        od_eventAlbum = new eventData.OD_eventAlbum();
         conf['eventAlbum'] = od_eventAlbum;
     }
 
@@ -434,7 +434,7 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
     var ids = [];
     for (var i = 0; i < visiblePoints.length; i++) {
         var featureVal = visiblePoints[i];
-        var sc = new sampleSelectionCriteria();
+        var sc = new eventData.sampleSelectionCriteria();
         sc.addCriteria(chartTitle, featureVal);
         var selectedIds = cohort.selectSamples(sc.getCriteria());
         ids = ids.concat(selectedIds);
