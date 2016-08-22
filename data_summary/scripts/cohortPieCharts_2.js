@@ -25,43 +25,47 @@ var config = {};
 var getConfiguration = function(conf) {
     // look for od_config in cookies
     var querySettings = utils.parseJson(utils.getCookie('od_config')) || {};
-    conf['querySettings'] = querySettings;
+    conf.querySettings = querySettings;
 
     var od_eventAlbum = null;
     if ('eventAlbum' in conf) {
-        od_eventAlbum = conf['eventAlbum'];
+        od_eventAlbum = conf.eventAlbum;
     } else {
         od_eventAlbum = new eventData.OD_eventAlbum();
-        conf['eventAlbum'] = od_eventAlbum;
+        conf.eventAlbum = od_eventAlbum;
     }
 
-    var dataLoader = medbookDataLoader;
-
     if ('clinicalUrl' in conf) {
-        dataLoader.getClinicalData(conf['clinicalUrl'], od_eventAlbum);
+        medbookDataLoader.getClinicalData(conf.clinicalUrl, od_eventAlbum);
     }
 
     if ('expressionUrl' in conf) {
-        dataLoader.getExpressionData(conf['expressionUrl'], od_eventAlbum);
+        medbookDataLoader.getExpressionData(conf.expressionUrl, od_eventAlbum);
     }
 
     if ('mutationUrl' in conf) {
-        dataLoader.getMutationData(conf['mutationUrl'], od_eventAlbum);
+        medbookDataLoader.getMutationData(conf.mutationUrl, od_eventAlbum);
     }
 
     if ('mongoData' in conf) {
-        var mongoData = conf['mongoData'];
+        var mongoData = conf.mongoData;
         if ('clinical' in mongoData) {
-            if (mongoData['clinical'] === 'aaa') {
-                dataLoader.mongoClinicalData(aaa, od_eventAlbum);
+            if (mongoData.clinical === 'aaa') {
+                medbookDataLoader.mongoClinicalData(aaa, od_eventAlbum);
             } else {
-                dataLoader.mongoClinicalData(mongoData['clinical'], od_eventAlbum);
+                medbookDataLoader.mongoClinicalData(mongoData.clinical, od_eventAlbum);
             }
         }
 
         if ('expression' in mongoData) {
-            dataLoader.mongoExpressionData(mongoData['expression'], od_eventAlbum);
+            medbookDataLoader.mongoExpressionData(mongoData.expression, od_eventAlbum);
         }
+    }
+
+    if ("bmeg" in conf) {
+        console.log("got bmeg data!!!");
+        var gaeaEventDataList = conf.bmeg;
+        bmegDataLoader.loadGaeaEventData(gaeaEventDataList, od_eventAlbum);
     }
 
     return conf;
@@ -97,23 +101,23 @@ var getConfiguration = function(conf) {
 // };
 
 Highcharts.setOptions({
-    chart : {
+    chart: {
         // backgroundColor : {
         // linearGradient : [0, 0, 500, 500],
         // stops : [[0, 'rgb(255, 255, 255)'], [1, 'rgb(240, 240, 255)']]
         // },
-        borderWidth : 2,
+        borderWidth: 2,
         // plotBackgroundColor : 'rgba(255, 255, 255, .9)',
         // plotShadow : true,
         // plotBorderWidth : 1
-        events : {
+        events: {
 
             // use renderer to draw some element to act as a button to promote a chart to the top.
             // http://api.highcharts.com/highcharts#Renderer
             // https://stackoverflow.com/questions/11214481/how-can-i-add-element-with-attributes-to-svg-using-jquery
-            load : function() {
+            load: function() {
                 this.renderer.text("move to top", 3, 11).attr({
-                    "cursor" : "pointer"
+                    "cursor": "pointer"
                 }).on("click", function() {
                     var chartDivElement = this.parentNode.parentNode.parentNode;
                     moveChartUp(chartDivElement);
@@ -121,7 +125,7 @@ Highcharts.setOptions({
 
                 // clickable testing text
                 this.renderer.text("pie slice samples", 3, 22).attr({
-                    "cursor" : "pointer"
+                    "cursor": "pointer"
                 }).on("click", function() {
                     var chartDivElemId = this.parentNode.parentNode.parentNode.id;
                     var chartIndex = chartDivElemId.replace(/^chart/, '');
@@ -137,28 +141,28 @@ Highcharts.setOptions({
 });
 
 var chartOptions = {
-    renderTo : null,
-    plotBackgroundColor : null,
-    plotBorderWidth : null,
-    plotShadow : false
+    renderTo: null,
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false
 };
 
 var plotOptions = {
-    pie : {
-        allowPointSelect : true,
-        cursor : 'pointer',
-        dataLabels : {
-            enabled : true,
-            color : 'black',
+    pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+            enabled: true,
+            color: 'black',
             // connectorColor : 'gray',
-            distance : 5,
+            distance: 5,
             // format : '<b>{point.name}</b>: {point.y}',
-            format : '{point.y}'
+            format: '{point.y}'
         },
-        point : {
-            events : {
+        point: {
+            events: {
                 // click pie slice to add sample selection criteria & redraw charts
-                click : function() {
+                click: function() {
                     var eventId = this.series.name;
                     var value = this.name;
                     if (value === 'null ') {
@@ -173,33 +177,33 @@ var plotOptions = {
 };
 
 var tooltipOptions = {
-    pointFormat : '{point.y} samples is <b>{point.percentage:.1f} %</b>'
+    pointFormat: '{point.y} samples is <b>{point.percentage:.1f} %</b>'
 };
 
 var legendOptions = {
-    "enabled" : true,
-    "floating" : false,
-    "itemWidth" : null,
-    "layout" : "horizontal",
-    "align" : "center"
+    "enabled": true,
+    "floating": false,
+    "itemWidth": null,
+    "layout": "horizontal",
+    "align": "center"
 };
 
 var pieChartOptionsTemplate = {
-    chart : chartOptions,
-    legend : legendOptions,
-    title : {
-        text : ''
+    chart: chartOptions,
+    legend: legendOptions,
+    title: {
+        text: ''
     },
-    credits : {
-        enabled : false
+    credits: {
+        enabled: false
     },
-    tooltip : tooltipOptions,
-    plotOptions : plotOptions,
-    series : [{
-        type : 'pie',
-        name : null,
-        data : null,
-        showInLegend : true
+    tooltip: tooltipOptions,
+    plotOptions: plotOptions,
+    series: [{
+        type: 'pie',
+        name: null,
+        data: null,
+        showInLegend: true
     }]
 };
 
@@ -209,7 +213,7 @@ var pieChartOptionsTemplate = {
  * @param {Object} chartOptions
  */
 var setChartRenderTo = function(elementId, chartOptions) {
-    chartOptions["chart"]["renderTo"] = elementId;
+    chartOptions.chart.renderTo = elementId;
 };
 
 /**
@@ -219,8 +223,8 @@ var setChartRenderTo = function(elementId, chartOptions) {
  * @param {Object} chart
  */
 var setChartSeries = function(seriesName, seriesData, chartOptions) {
-    chartOptions["series"][0]["name"] = seriesName;
-    chartOptions["series"][0]["data"] = seriesData;
+    chartOptions.series[0].name = seriesName;
+    chartOptions.series[0].data = seriesData;
 };
 
 /**
@@ -229,7 +233,7 @@ var setChartSeries = function(seriesName, seriesData, chartOptions) {
  * @param {Object} chartOptions
  */
 var setChartTitle = function(title, chartOptions) {
-    chartOptions["title"]["text"] = title;
+    chartOptions.title.text = title;
 };
 
 /**
@@ -293,8 +297,8 @@ var updateChartCrumbs = function(selectionCriteria) {
     e.innerHTML = "applied filters: ";
     var criteria = selectionCriteria.getCriteria();
     for (var i in criteria) {
-        var eventId = criteria[i]["eventId"];
-        var value = criteria[i]["value"];
+        var eventId = criteria[i].eventId;
+        var value = criteria[i].value;
         var button = createCrumbButton(eventId, value);
         e.appendChild(button);
     }
@@ -312,7 +316,7 @@ var moveChartUp = function(promotedChartDiv) {
             bubble = node;
             continue;
         }
-        if (bubble != null) {
+        if (bubble !== null) {
             utils.swapContainingDivs(bubble, node);
         }
     }
@@ -334,9 +338,8 @@ var setNewChartData = function(chartObject, chartData) {
 var redrawNewData = function(chart, data) {
 
     // recover slice color mapping for chart
-    var title = chart["options"]["title"]["text"];
-    if ( title in sliceColorMapping) {
-    } else {
+    var title = chart.options.title.text;
+    if (title in sliceColorMapping) {} else {
         sliceColorMapping[title] = extractColorMapping(chart);
     }
 
@@ -344,8 +347,8 @@ var redrawNewData = function(chart, data) {
 
     // set slice colors in data object
     for (var i = 0; i < data.length; i++) {
-        var color = colorMapping[data[i]["name"]];
-        data[i]["color"] = color;
+        var color = colorMapping[data[i].name];
+        data[i].color = color;
     }
 
     // set new data for chart
@@ -358,8 +361,8 @@ var redrawNewData = function(chart, data) {
  */
 var extractColorMapping = function(chart) {
     var mapping = {};
-    var data = chart.series[0]["options"]["data"];
-    var colors = chart["options"]["colors"];
+    var data = chart.series[0].options.data;
+    var colors = chart.options.colors;
 
     for (var i = 0; i < data.length; i++) {
         var name = data[i].name;
@@ -393,18 +396,18 @@ var redrawCharts = function() {
  * Get series data for pie chart from category counts.
  */
 var countsToPieData = function(counts) {
-    var data = new Array();
+    var data = [];
     var types = utils.getKeys(counts);
     for (var i = 0; i < types.length; i++) {
         var type = types[i];
         var count = counts[type];
-        var typeData = new Object();
+        var typeData = {};
         data.push(typeData);
         if (type === 'null') {
             type = 'null ';
         }
-        typeData["name"] = type;
-        typeData["y"] = count;
+        typeData.name = type;
+        typeData.y = count;
     }
     return data;
 };
@@ -413,7 +416,7 @@ var countsToPieData = function(counts) {
  * Get the sample IDs from the visible points of the chart, restricting to IDs also in idListPool.
  */
 var getVisiblePointsIds = function(chartObj, idListPool) {
-    if (chartObj == null) {
+    if (chartObj === null) {
         return [];
     }
 
@@ -432,8 +435,8 @@ var getVisiblePointsIds = function(chartObj, idListPool) {
 
     // find the IDs in the visible points
     var ids = [];
-    for (var i = 0; i < visiblePoints.length; i++) {
-        var featureVal = visiblePoints[i];
+    for (var j = 0; j < visiblePoints.length; j++) {
+        var featureVal = visiblePoints[j];
         var sc = new eventData.sampleSelectionCriteria();
         sc.addCriteria(chartTitle, featureVal);
         var selectedIds = cohort.selectSamples(sc.getCriteria());
@@ -506,7 +509,7 @@ var setupDiv = function(outerContainerElem, chartNames) {
 pie_charts = function(containerElem, config) {
     config = getConfiguration(config);
 
-    cohort = config['eventAlbum'];
+    cohort = config.eventAlbum;
 
     var chartNames = cohort.getEventIdsByType()['clinical data'];
 
